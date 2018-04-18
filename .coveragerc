@@ -1,0 +1,11 @@
+[run]
+omit = 
+  tests/*
+  .tox/*
+include = citest/*
+branch = True
+source = citest/
+
+[report]
+show_missing = True
+
