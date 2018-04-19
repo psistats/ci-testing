@@ -1,2 +1,3 @@
 # ci-testing
-a project for testing ci and building stuff
+
+This project serves as a testing ground for jenkins/github/python/etc integration
