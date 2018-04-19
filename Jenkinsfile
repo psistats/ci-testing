@@ -10,13 +10,17 @@ pipeline {
       }
     }
     stage('test-py36') {
-      steps {
-        sh 'tox -e py36'
+      withPythonEnv('psikon-py36') {
+        steps {
+          sh 'tox -e py36'
+        }
       }
     }
     stage('test-coverage') {
-      steps {
-        sh 'tox -e coverage'
+      withPythonEnv('psikon-py35') {
+        steps {
+          sh 'tox -e coverage'
+        }
       }
     }
   }
