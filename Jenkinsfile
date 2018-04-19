@@ -28,7 +28,6 @@ pipeline {
   }
   post {
     always {
-      junit 'coverage.xml'
       step([$class: 'CoberturaPublisher',
         autoUpdateHealth: false,
         autoUpdateStability: false,
