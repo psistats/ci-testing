@@ -3,7 +3,10 @@ pipeline {
   stages {
     stage('test-py35') {
       steps {
-        sh 'tox -e py35'
+        withPythonEnv('psikon-py35') {
+          sh 'pip install tox'
+          sh 'tox -e py35'
+        }
       }
     }
     stage('test-py36') {
