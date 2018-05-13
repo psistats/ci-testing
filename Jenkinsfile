@@ -38,8 +38,9 @@ pipeline {
     stage('set-build-number') {
       when { branch 'develop' }
       steps {
+        cleanWs()
+        sh 'git clone git@github.com:psistats/ci-testing.git'
         sh 'git checkout develop'
-        sh 'git pull'
         
         withPythonEnv('psikon-py35') {
           pysh 'building/change_version.py --set-build=${BUILD_NUMBER}'
@@ -57,7 +58,6 @@ pipeline {
           }
         }
         */
-        sh 'git remote set-url origin git@github.com:psistats/ci-testing.git'
 
         sshagent(credentials: ['psikon-ci-github-ssh']) {
           sh 'git push origin develop'
