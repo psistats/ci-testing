@@ -75,6 +75,8 @@ You need to setup your GitHub credentials first. I've never managed to use the "
 3. Give it all repo, admin:org, admin:repo_hook, notifications, user, write:discussion permissions
 4. Copy the generated token and create a new secret key credential with this token
 
+You will also have to setup SSH keys. Read https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/
+
 ## Versioning
 
 The develop branch will always have the NEXT version. It will be `x.y.z-dev[build_number]`. So when something gets merged into develop, its build number will go up.
