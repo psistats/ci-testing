@@ -1,5 +1,5 @@
 - job:
-   name: ci-testing-jjb
+   name: citest
    project-type: multibranch
    number-to-keep: '20'
    scm:

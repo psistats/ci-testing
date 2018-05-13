@@ -1,5 +1,5 @@
 - job:
-    name: ci-testing-jjb-snapshot
+    name: citest-snapshot
     project-type: pipeline
     pipeline-scm:
       scm:
