@@ -42,7 +42,6 @@ pipeline {
       }
     }
     stage('test-coverage') {
-      when { expression { return env.shouldBuild != "false" } }
       steps {
         withPythonEnv('psikon-py35') {
           pysh 'tox -e coverage'
