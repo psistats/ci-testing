@@ -1,11 +1,23 @@
-# ci-testing
-This project is to test various Jenkins CI related things.
+# citest
 
-Once complete, it will serve as documentation for setting up a Jenkins environment in a similar fashion as well as gotchas
+This project aims to act as a template for future projects. It setups a series of jenkin jobs, has a bunch of helpful scripts, and ultimately automates the whole process of pull request testing, deploying packages of various kinds, and incrementing version numbers, and so on.
 
-## Repository Workflow
+It also serves as a point of documentation for starting up your own CI environment from scratch.
 
-This project imposes a specific kind of workflow.
+It aims to do a lot but it's also very opinionated and expects a certain kind of workflow. Going outside of this workflow will have its own challenges.
+
+This project is python-centric, but could be adapted to fit any other ecosystem.
+
+Following the instructions here, you will end up having
+
+1. A Jenkins server with Github integration
+2. A local debian repository
+3. A simple unit tested python project
+4. test coverage reporting with tox
+
+## Workflow
+
+### Github Repository
 
 
 ```
@@ -18,92 +30,181 @@ develop ------*----*---\----
 master ------------------*---
 ```
 
-Each new feature and/or bug fix must be a squashed pull request to the develop branch.
+When you want to add a new feature, or fix a new bug, you should first branch off of develop, and do your changes there. Afterwards, submit a pull request against the develop branch. Once reviewed, merge the PR into the `develop` branch.
 
-At some point, the develop branch will merge into the master bracnh. All changed between the last merge and this merge will count as the change log. When master is updated, this means a new release, thus a new version tag.
+Every time a commit is done to the develop branch, it will trigger a new snapshot build. So one should not commit anything into the develop branch outside of pull requests. This also means pull requests should be squashed, with the commit message explaining what new feature was added or what bug was fixed. A change log will be generated between each commit and it will be used wherever a change log is necessary.
 
-Whenever a new feature / fix is merged into the develop branch, then the build number should increase and a snapshot should be built, packaged, and deployed.
+When you feel ready to make a new release, make a pull request between develop and master. The commit message should include a "[release version x.y.z]" where x.y.z is the new version you wish to release. It's assumed this new version follows the https://semver.org/ format.
 
-## git tricks
+When a commit happens on master, a new release is created and deployed. The version the develop branch will change to x.y.z+1. So if the release version was 4.2.1, the develop version becomes 4.2.2.
 
-### squash the feature branch
+### Squashing Commits
+
+These commands will squash all commits in a branch. Use it for your feature/bug fix branches.
 
 ```
-git checkout yourBranch
-git reset $(get merge-base develop yourBranch)
+git checkout [branch name]
+git reset $(get merge-base develop [branch name])
 git add -A
-git commit -m "describe the feature"
+git commit -m "Describe the feature"
 ```
 
-## Jenkins Setup
+### Commit Special Commands
 
-### JJB
+If these messages are included in the commit, they trigger different actions
 
-Jenkins Job Builder helps making jenkins projects easier.
+| Command | Description |
+|---------|-------------|
+| [ci skip] | Skip various build steps |
+| [release version x.y.z] | Release a new version on master with version `x.y.z` |
 
-### Projects
+## Installation
 
-1. Testing and generating coverage, handles pull requests as well
-2. Generating snapshot releases
-3. Generating proper releases
+Setting everything up is a bit of a time consuming process. You will need a few prerequisites:
 
-It's becoming clearer now!
+1. A debian-based operating system (Debian, Mint, Ubuntu, etc)
+2. A github account that has administrative rights on a repository
 
-### Plugins
+I suggest creating a unique github account specific for Jenkins. First fork this repository then follow these instructions to get it up and running. You can tweak anything here that you'd like in order to match your own environment and project.
 
-1. Cobertura Plugin
-2. Git Plugin
-3. Git Autostatus Plugin
-4. GitHub Branch Source Plugin
-5. Git Custom Notification Context SCM Behavior
-6. GitHub Integration Plugin
-7. HTML Publisher plugin
-8. MultiJob Plugin
-9. Pipeline Github Notify Step Plugin
-10. Pipeline GitHub
-11. Pipeline GitHub Groovy Libraries
-12. Pipeline Multibranch
-13. Pyenv Pipeline Plugin
-14. ShiningPanda Plugin
+### Quick Jenkins Install
 
-### Setup
+These instructions will setup Jenkins and a control script for it in your `$HOME` directory.
 
-Jenkins will be used to automate all facets of building and deploying artifacts. Its responsibilities will be:
+You can replace `$HOME` with another folder.
 
-1. Build pull requests on the develop branch
-2. Build pull requests on the master branch
-3. Build a new release when the master branch changes
-4. Build a new snapshot when the develop branch changes
+```
+$ cd $HOME
+$ mkdir Jenkins
+$ wget http://mirrors.jenkins.io/war/latest/jenkins.war ./Jenkins
+$ wget https://raw.githubusercontent.com/psistats/citest/master/jenkins-control.sh ./Jenkins/jenkins-control.sh
+$ chmod u+x ./Jenkins/jenkins-control.sh
+```
+
+Edit jenkins-control.sh and set the various settings to match your environment. Afterwards you can start Jenkins
+
+```
+$ $HOME/Jenkins/jenkins-control.sh start
+```
+
+And now you can visit your Jenkins installation at http://127.0.0.1:8080/jenkins. You will be asked to perform a few tasks during installation. You can pick and choose some plugins to install now, but the next section will have the definitive list of plugins to install to make this project work.
+
+### Jenkins Plugins
+
+To provide the complete CI solution, the following plugins should be installed:
+
+1. Blue Ocean
+2. GitHub Pipeline for Blue Ocean
+3. Blue Ocean Pipeline Editor
+4. Workspace Cleanup
+5. Email Extension
+6. Pyenv Pipeline
+7. ShiningPanda
+8. Cobertura
+
+Once the plugins are selected click `Download now and install after restart`.
+
+The plugins will download and Jenkins will restart itself. You may need to refresh your screen several times to see the current state of Jenkins.
+
+### Jenkins Github Integration
+
+The next step is to integrate your Jenkins server with Github. To do this, we need to create three sets of credentials:
+
+1. An SSH Key
+2. A username/password
+3. A Github token
+
+This is because different tools in this workflow connect to Github in different ways.
+
+#### SSH Key
+
+Generate your SSH key using:
+
+```
+$ ssh-keygen -t rsa -b 4096 -C "ci@psikon.com"
+```
+
+Use the default value for the location of your key, and enter in a good password.
+
+Next you will need to add your SSH key to ssh-agent.
+
+```
+$ eval "$(ssh-agent -s)"
+$ ssh-add ~/.ssh/id_rsa
+```
+
+Next you will need to add this key to your Github account. You can follow the instructions here: https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/
+
+Once your SSH key is associated to your Github account, test to make sure everything is setup properly:
+
+```
+$ mkdir tmp
+$ cd tmp
+$ git clone git@github.com:[your account]/citest.git
+$ cd ..
+$ rm -rf tmp
+```
+
+You should encounter no errors. Now you must add your SSH key to Jenkins. 
+
+1. Using the left side menu, select Credentials.
+2. In the next screen, under "Stores scoped to Jenkins" click on "_(global)". 
+3. In the next screen click on "Add Credentials" from the left hand side menu. 
+4. Select `SSH Username with private key` from the "Kind" dropdown. 
+5. For username, enter your Github username. 
+6. Select "From the Jenkins master ~/.ssh" 
+7. Your passphrase is the one you used when generating your SSH key
+8. Give a meaningful ID and description
+9. Click OK
+
+#### User/Pass Credentials
+
+To add your github username/password to jenkins:
+
+1. Using the left side menu, select Credentials.
+2. In the next screen, under "Stores scoped to Jenkins" click on "_(global)".
+3. In the next screen click on "Add Credentials" from the left hand side menu.
+4. Select `Username with password` from the "Kind" dropdown.
+5. Enter in your github username and password
+6. Give a meaningful ID and description
+7. Click OK
+
+#### Github Token
+
+You will also need to generate a github token and add it into Jenkins. First goto https://github.com/settings/tokens and click on `Generate New Token`.
+
+After giving the token a meaningful name, select the following scopes:
+
+1. repo
+2. read:org
+3. read:public_key
+4. admin:repo_hook
+5. admin:org_hook
+6. notifications
+7. read:user
+8. user:email
+9. write:discussion
+
+Once created, you'll be shown your token. This will be the only time you get to see your token. Copy it, go to your Jenkins server and follow these instructions:
+
+1. Using the left side menu, select Credentials.
+2. In the next screen, under "Stores scoped to Jenkins" click on "_(global)".
+3. In the next screen click on "Add Credentials" from the left hand side menu.
+4. Select `Secret text` from the "Kind" dropdown.
+5. Paste your token into the "Secret" field.
+6. Give it a meaningful ID and description.
+7. Click OK
+
+## Setting up the Project
+
+Jenkins is now running and connected to Github. It's time to setup the citest project and see if we can make it build.
+
+### Jenkins Job Builder
+
+This tool makes it easy to create new Jenkins jobs using configuration files.
+
+For more information visit: https://docs.openstack.org/infra/jenkins-job-builder/index.html
+
+#### Installation
 
 
-#### Credentials
-
-You need to setup your GitHub credentials first. I've never managed to use the "Add Credential" feature. So instead goto to:
-
-`Jenkins -> Credentials`
-
-1. Add your GitHub username/password.
-2. Goto https://github.com/settings/tokens and generate a new token
-3. Give it all repo, admin:org, admin:repo_hook, notifications, user, write:discussion permissions
-4. Copy the generated token and create a new secret key credential with this token
-
-You will also have to setup SSH keys. Read https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/
-
-## Versioning
-
-The develop branch will always have the NEXT version. It will be `x.y.z-dev[build_number]`. So when something gets merged into develop, its build number will go up.
-
-The master branch's version will be decided by develop branch.
-
-## Building Steps
-
-1. Code quality/linting
-2. Unit testing
-3. Prepare source distribution
-4. Prepare debian package
-5. Prepare RPM package
-6. Prepare Windows package
-7. Upload artifacts to their respective locations
-
-
-The preparation of packages should be a standalone job.
