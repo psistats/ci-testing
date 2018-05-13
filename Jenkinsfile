@@ -2,7 +2,7 @@ pipeline {
   agent {
     node {
       label 'master'
-      customWorkspace "${JENKINS_HOME}/workspace/${JOB_NAME}/${BUILD_NUMBER}"
+      customWorkspace "${JENKINS_HOME}/workspace/${JOB_NAME}"
     }
   }
   stages {
@@ -34,6 +34,10 @@ pipeline {
       }
     }
     */
+    stage('cleanup') {
+      when { branch 'develop' }
+      steps {
+        
     stage('set-build-number') {
       when { branch 'develop' }
       steps {
@@ -46,20 +50,23 @@ pipeline {
 
         sh 'git commit setup.py -m "Increasing build number"'
 
+        /*
         withCredentials([sshUserPrivateKey(credentialsId: 'psikon-ci-github-ssh', keyFileVariable: 'GITHUB_KEY')]) {
           sh 'echo ssh -i $GITHUB_KEY -l git -o StrictHostKeyChecking=no \\"$@\\" > run_ssh.sh'
           sh 'chmod +x run_ssh.sh'
           withEnv(['GIT_SSH=run_ssh.sh']) {
+            sh 'git remote set-url origin git@github.com:psistats/ci-testing.git'
             sh 'git push origin develop'
           }
         }
-        /*
+        */
 
-        sshagent(['psikon-ci-github-ssh']) {
+        sshagent(credentials: ['psikon-ci-github-ssh']) {
+          sh 'git remote set-url origin git@github.com:psistats/ci-testing.git'
           sh 'git push origin develop'
         }
 
-        
+        /*
         withCredentials([usernamePassword(credentialsId: 'psikon-ci-github-accoutn', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
           sh 'git checkout develop'
           sh 'git pull'
