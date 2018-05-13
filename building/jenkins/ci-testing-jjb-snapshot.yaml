@@ -1,10 +1,9 @@
 - job:
-  name: ci-testing-jjb-snapshot
-  project-type: pipeline
-  pipeline-scm:
-    scm:
-      - git:
-        url: https://github.com/psistats/ci-testing
-    script-path: building/jenksin/ci-testing-jjb-snapshot.groovy
-    lightweight-checkout: true
-
+    name: ci-testing-jjb-snapshot
+    project-type: pipeline
+    pipeline-scm:
+      scm:
+        - git:
+            url: https://github.com/psistats/ci-testing
+      script-path: building/jenksin/ci-testing-jjb-snapshot.groovy
+      lightweight-checkout: true

@@ -59,15 +59,8 @@ pipeline {
         }
       }
     }
-    stage('snapshot') {
-      when {
-        branch 'develop'
-        expression { return env.shouldBuild != "false " }
-      }
-      steps {
-        build job: 'ci-testing-snapshot'
        
-    stage('set-build-number') {
+    stage('snapshot') {
       when { 
         branch 'develop'
         expression { return env.shouldBuild != "false" }
