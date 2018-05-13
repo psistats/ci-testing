@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='citest',
-      version='0.1.0.dev50',
+      version='0.1.0.dev52',
       description='A project to test ci and building',
       author='Alex Dow',
       author_email='adow@psikon.com',
