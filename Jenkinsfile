@@ -26,7 +26,7 @@ pipeline {
       }
     }
     stage('test-py35') {
-      when { expression { return shouldBuild != "false" } }
+      when { expression { return env.shouldBuild != "false" } }
       steps {
         withPythonEnv('psikon-py35') {
           pysh 'tox -e py35'
@@ -34,7 +34,7 @@ pipeline {
       }
     }
     stage('test-py36') {
-      when { expression { return shouldBuild != "false" } }
+      when { expression { return env.shouldBuild != "false" } }
       steps {
         withPythonEnv('psikon-py35') {
           pysh 'tox -e py36'
@@ -42,7 +42,7 @@ pipeline {
       }
     }
     stage('test-coverage') {
-      when { expression { return shouldBuild != "false" } }
+      when { expression { return env.shouldBuild != "false" } }
       steps {
         withPythonEnv('psikon-py35') {
           pysh 'tox -e coverage'
@@ -53,7 +53,7 @@ pipeline {
     stage('set-build-number') {
       when { 
         branch 'develop'
-        expression { return shouldBuild != "false" }
+        expression { return env.shouldBuild != "false" }
       }
       steps {
         cleanWs()
