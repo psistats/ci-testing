@@ -39,7 +39,9 @@ pipeline {
       when { branch 'develop' }
       steps {
         cleanWs()
-        sh 'git clone git@github.com:psistats/ci-testing.git'
+        sshagent(credentials: ['psikon-ci-github-ssh']) {
+          sh 'git clone git@github.com:psistats/ci-testing.git'
+        }
         sh 'git checkout develop'
         
         withPythonEnv('psikon-py35') {
@@ -60,7 +62,7 @@ pipeline {
         */
 
         sshagent(credentials: ['psikon-ci-github-ssh']) {
-          sh 'git push origin develop'
+          sh 'git push git@github.com:psistats/ci-testing.git'
         }
 
         /*
