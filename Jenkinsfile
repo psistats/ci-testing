@@ -46,6 +46,16 @@ pipeline {
       steps {
         withPythonEnv('psikon-py35') {
           pysh 'tox -e coverage'
+          step([$class: 'CoberturaPublisher',
+          autoUpdateHealth: false,
+          autoUpdateStability: false,
+          coberturaReportFile: 'coverage.xml',
+          failUnhealthy: false,
+          failUnstable: false,
+          maxNumberOfBuilds: 30,
+          onlyStable: true,
+          sourceEncoding: 'ASCII',
+          zoomCoverageChart: true
         }
       }
     }
@@ -82,17 +92,12 @@ pipeline {
   }
   post {
     always {
-      step([$class: 'CoberturaPublisher',
-        autoUpdateHealth: false,
-        autoUpdateStability: false,
-        coberturaReportFile: 'coverage.xml',
-        failUnhealthy: false,
-        failUnstable: false,
-        maxNumberOfBuilds: 0,
-        onlyStable: false,
-        sourceEncoding: 'ASCII',
-        zoomCoverageChart: false
-      ])
+      emailext (
+        subject: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+        body: """SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER]':
+                 Check console output at ${env.BUILD_URL}""",
+        recipientProviders: [[$class 'DevelopersRecipientProvider']]
+      )
     }
   }
 }
