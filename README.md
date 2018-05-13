@@ -14,6 +14,7 @@ Following the instructions here, you will end up having
 2. A local debian repository
 3. A simple unit tested python project
 4. test coverage reporting with tox
+5. test multiple python environments and report one each one
 
 ## Workflow
 
@@ -101,10 +102,19 @@ To provide the complete CI solution, the following plugins should be installed:
 6. Pyenv Pipeline
 7. ShiningPanda
 8. Cobertura
+9. SSH Agent
 
 Once the plugins are selected click `Download now and install after restart`.
 
 The plugins will download and Jenkins will restart itself. You may need to refresh your screen several times to see the current state of Jenkins.
+
+### Jenkins Python Integration
+
+In order to use different python environments, you must configure global tools for each python version you have installed.
+
+Click on "Manage Jenkins" from the left hand side menu and click on Global Tool Configuration.
+
+Under "Python" click on the `Python Installations...` button. You may already see some preconfigured python installations. Click the Add Python button and specify a name and location to your python executable. 
 
 ### Jenkins Github Integration
 
@@ -236,18 +246,24 @@ First clone the repository:
 $ git checkout https://github.com/[your name]/citest
 ```
 
-Next, edit the file `citest/building/jenkins/citest-snapshot.groovy`. On line 13, change the url to match your github url, and change `credentialsId` to match the ID you used when creating the username/password credentials in Jenkins. On line 14, change the string 'psikon-ci-github-ssh' to the same id you used when creating the SSH key credential in Jenkins. Save the file when complete.
+Next, edit the file `citest/building/jenkins/citest-snapshot.groovy`. On line 13, change the url to match your github url, and change `credentialsId` to match the ID you used when creating the username/password credentials in Jenkins. On line 14, change the string 'psikon-ci-github-ssh' to the same id you used when creating the SSH key credential in Jenkins. Save the file when complete. As well, look for instances of `python-py35` or `python-py36` and replace them with the names of your python installations.
 
 Afterwards, edit the file `citest/building/jenkins/citest-snapshot.yaml`. Change url to match your github url, and change the credentials id to the same one you used in `citest-snapshot.groovy`.
 
-Finally, edit the file `citest/building/jenkins/citest.yaml` and change the URL and credential id accordingly.
+Next, edit the file `citest/building/jenkins/citest.yaml` and change the URL and credential id accordingly.
+
+Finally, edit the file `citest/Jenkinsfile`. Look for instances of psikon-py35 and psikon-py36 and change them to the names of your python installations that you setup in Jenkins.
 
 #### Send Projects to Jenkins
 
 You can now use JJB to send your projects to Jenkins:
 
 ```
-$ 
+$ jenkins-jobs update citest/building/jenkins
+$ jenkins-jobs update citest/building/jenkins
+```
+
+You should now see your jobs in Jenkins. 
 
 
 
