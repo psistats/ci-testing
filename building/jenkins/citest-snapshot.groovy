@@ -1,3 +1,4 @@
+// vi: ft=Jenkinsfile
 pipeline {
   agent {
     node {
@@ -29,6 +30,10 @@ pipeline {
             }
             sh 'git commit setup.py -m "Increasing build number [ci skip]"'
             sh 'git push git@github.com:psistats/ci-testing.git'
+
+            withPythonEnv('psikon-py35') {
+              pysh 'building/build_deb.sh'
+            }
           }
         }
       }

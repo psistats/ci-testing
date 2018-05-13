@@ -66,7 +66,7 @@ pipeline {
         expression { return env.shouldBuild != "false" }
       }
       steps {
-        build (job: "ci-testing-jjb-snapshot", wait: false)
+        build (job: "citest-snapshot", wait: false)
         /*
         cleanWs()
         sshagent(credentials: ['psikon-ci-github-ssh']) {
