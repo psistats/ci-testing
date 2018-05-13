@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='citest',
-      version='0.1.0.dev10',
+      version='0.1.0.dev11',
       description='A project to test ci and building',
       author='Alex Dow',
       author_email='adow@psikon.com',
@@ -19,8 +19,8 @@ setup(name='citest',
       python_requires='>=3.5',
       entry_points = {
           'console_scripts': [
+              'citest=citest.console:main',
               'citest-service=citest.service:main'
           ]
       }
-
 )
