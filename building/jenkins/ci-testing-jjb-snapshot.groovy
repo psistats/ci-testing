@@ -19,7 +19,7 @@ pipeline {
               for (int i = 0; i < changeLogSets.size(); i++) {
                 for (int j = 0; j < changeLogSets[i].items.length; j++) {
                   def entry = changeLogSets[i].items[j];
-                  echo "${entry.commitId} by ${entry.author} on ${new Date(entry.timestamp)}: ${entry.map} - ${entry.msg}\n"
+                  echo "${entry.commitId} by ${entry.author} on ${new Date(entry.timestamp)}: ${entry.msg}\n"
                 }
               }
             }
