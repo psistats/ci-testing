@@ -19,8 +19,8 @@ setup(name='citest',
       python_requires='>=3.5',
       entry_points = {
           'console_scripts': [
+              'citest=citest.console:main',
               'citest-service=citest.service:main'
           ]
       }
-
 )
