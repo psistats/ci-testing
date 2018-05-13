@@ -45,7 +45,7 @@ pipeline {
         }
 
         sh 'git commit setup.py -m "Increasing build number"'
-        sh 'git push origin master'
+        sh 'git push origin develop'
 
         /*
         withCredentials([usernamePassword(credentialsId: 'psikon-ci-github-accoutn', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
