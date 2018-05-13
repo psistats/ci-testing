@@ -4,6 +4,9 @@
     pipeline-scm:
       scm:
         - git:
+            branches:
+              - '*/develop'
             url: https://github.com/psistats/ci-testing
-      script-path: building/jenksin/ci-testing-jjb-snapshot.groovy
+            credentials-id: 'psikon-ci-github-accoutn'
+      script-path: building/jenkins/ci-testing-jjb-snapshot.groovy
       lightweight-checkout: true
