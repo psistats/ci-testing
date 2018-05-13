@@ -6,6 +6,17 @@ pipeline {
     }
   }
   stages {
+    stage('prepare') {
+      steps {
+        script {
+          result = sh(script: "git log -1 | grep '.*\\[ci skip\\].*'", returnStatus: true)
+          if (result == 0) {
+            echo ("'ci ksip' spotted in git commit. Aborting.")
+            success ("'ci skip' spotted in git commit. Aborting.")
+          }
+        }
+      }
+    }     
     stage('debug-output') {
       steps {
         sh 'printenv'
@@ -46,8 +57,8 @@ pipeline {
             withPythonEnv('psikon-py35') {
               pysh 'building/change_version.py --set-build=${BUILD_NUMBER}'
             }
-//            sh 'git commit setup.py -m "Increasing build number [skip ci]"'
-//            sh 'git push git@github.com:psistats/ci-testing.git'
+            sh 'git commit setup.py -m "Increasing build number [skip ci]"'
+            sh 'git push git@github.com:psistats/ci-testing.git'
           }
         }
 
