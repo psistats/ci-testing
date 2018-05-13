@@ -6,7 +6,7 @@
         - git:
             branches:
               - '*/develop'
-            url: https://github.com/psistats/ci-testing
-            credentials-id: 'psikon-ci-github-accoutn'
+            url: https://github.com/psistats/citest
+            credentials-id: 'psikon-ci-github-account'
       script-path: building/jenkins/citest-snapshot.groovy
       lightweight-checkout: true

@@ -4,8 +4,8 @@
    number-to-keep: '20'
    scm:
      - github:
-        repo: 'ci-testing'
+        repo: 'citest'
         repo-owner: 'psistats'
-        credentials-id: 'psikon-ci-github-accoutn'
+        credentials-id: 'psikon-ci-github-account'
         discoverer-pr-forks-trust: nobody
 

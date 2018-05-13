@@ -10,7 +10,7 @@ pipeline {
     stage('prepare') {
       steps {
         cleanWs()
-        git(url: 'https://github.com/psistats/ci-testing.git', credentialsId: 'psikon-ci-github-accoutn', branch: 'develop')
+        git(url: 'https://github.com/psistats/citest', credentialsId: 'psikon-ci-github-account', branch: 'develop')
         sshagent(credentials: ['psikon-ci-github-ssh']) {
           script {
             sh 'git checkout develop'
@@ -29,7 +29,7 @@ pipeline {
               pysh 'building/change_version.py --set-build=${BUILD_NUMBER}'
             }
             sh 'git commit setup.py -m "Increasing build number [ci skip]"'
-            sh 'git push git@github.com:psistats/ci-testing.git'
+            sh 'git push git@github.com:psistats/citest'
 
             withPythonEnv('psikon-py35') {
               pysh 'building/build_deb.sh'

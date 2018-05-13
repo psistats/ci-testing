@@ -26,7 +26,6 @@ pipeline {
         sh 'printenv'
       }
     }
-    /*
     stage('test-py35') {
       steps {
         withPythonEnv('psikon-py35') {
@@ -58,7 +57,6 @@ pipeline {
         }
       }
     }
-    */
        
     stage('snapshot') {
       when { 
@@ -67,40 +65,7 @@ pipeline {
       }
       steps {
         build (job: "citest-snapshot", wait: false)
-        /*
-        cleanWs()
-        sshagent(credentials: ['psikon-ci-github-ssh']) {
-          script {
-            sh 'git clone git@github.com:psistats/ci-testing.git .'
-            sh 'git checkout develop'
-            withPythonEnv('psikon-py35') {
-              pysh 'building/change_version.py --set-build=${BUILD_NUMBER}'
-            }
-            sh 'git commit setup.py -m "Increasing build number [ci skip]"'
-            sh 'git push git@github.com:psistats/ci-testing.git'
-          }
-        }
-
-        /*
-        withCredentials([usernamePassword(credentialsId: 'psikon-ci-github-accoutn', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-          sh 'git checkout develop'
-          sh 'git pull'
-          sh 'git commit setup.py -m "Increasing build number"'
-          sh 'git push origin develop'
-        }
-        */
       }
-    }
-  }
-  post {
-    success {
-      emailext (
-        subject: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-        body: """SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':
-                 Check console output at ${env.BUILD_URL}""",
-        to: 'ci@psikon.com',
-        recipientProviders: [[$class: 'DevelopersRecipientProvider']]
-      )
     }
   }
 }

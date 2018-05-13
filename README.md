@@ -207,4 +207,48 @@ For more information visit: https://docs.openstack.org/infra/jenkins-job-builder
 
 #### Installation
 
+```
+pip install jenkins-job-builder
+mkdir -p ~/.config/jenkins_jobs
+touch ~/.config/jenkins_jobs/jenkins_jobs.ini
+```
+
+Now edit `$HOME/.config/jenkins_jobs/jenkins_jobs.ini` and put the following in it:
+
+```
+[job_builder]
+
+[jenkins]
+user=[your jenkins username]
+password=[your jenkins password]
+url=[url to your Jenkins server]
+```
+
+### Deploy Projects
+
+Now that JJB is installed, it's time to deploy the citest projects to it. The first thing you need to do is to tweak some of the build scripts
+
+#### Edit Build Files
+
+First clone the repository:
+
+```
+$ git checkout https://github.com/[your name]/citest
+```
+
+Next, edit the file `citest/building/jenkins/citest-snapshot.groovy`. On line 13, change the url to match your github url, and change `credentialsId` to match the ID you used when creating the username/password credentials in Jenkins. On line 14, change the string 'psikon-ci-github-ssh' to the same id you used when creating the SSH key credential in Jenkins. Save the file when complete.
+
+Afterwards, edit the file `citest/building/jenkins/citest-snapshot.yaml`. Change url to match your github url, and change the credentials id to the same one you used in `citest-snapshot.groovy`.
+
+Finally, edit the file `citest/building/jenkins/citest.yaml` and change the URL and credential id accordingly.
+
+#### Send Projects to Jenkins
+
+You can now use JJB to send your projects to Jenkins:
+
+```
+$ 
+
+
+
 
