@@ -47,6 +47,8 @@ Jenkins Job Builder helps making jenkins projects easier.
 2. Generating snapshot releases
 3. Generating proper releases
 
+It's becoming clearer now!
+
 ### Plugins
 
 1. Cobertura Plugin
