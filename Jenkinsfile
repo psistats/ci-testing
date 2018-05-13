@@ -1,27 +1,46 @@
 pipeline {
-  agent any
+  agent {
+    node {
+      label 'master'
+      customWorkspace "${JENKINS_HOME}/workspace/${JOB_NAME}/${BUILD_NUMBER}"
+    }
+  }
   stages {
+    stage('debug-output') {
+      steps {
+        sh 'printenv'
+      }
+    }
     stage('test-py35') {
       steps {
         withPythonEnv('psikon-py35') {
-          sh 'pip install tox'
-          sh 'tox -e py35'
+          pysh 'tox -e py35'
         }
       }
     }
     stage('test-py36') {
       steps {
-        withPythonEnv('psikon-py36') {
-          sh 'pip install tox'
-          sh 'tox -e py36'
+        withPythonEnv('psikon-py35') {
+          pysh 'tox -e py36'
         }
       }
     }
     stage('test-coverage') {
       steps {
         withPythonEnv('psikon-py35') {
-          sh 'pip install tox'
-          sh 'tox -e coverage'
+          pysh 'tox -e coverage'
+        }
+      }
+    }
+    stage('set-build-number') {
+      when { branch 'develop' }
+      steps {
+        withPythonEnv('psikon-py35') {
+          pysh 'building/change_version.py --set-build=${BUILD_NUMBER}'
+        }
+        withCredentials([usernamePassword(credentialsId: 'psikon-ci-github-accoutn', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+          sh 'git commit -a -m "Increasing build number"'
+          sh 'git push'
         }
       }
     }
