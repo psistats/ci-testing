@@ -8,18 +8,20 @@ pipeline {
   stages {
     stage('prepare') {
       steps {
-        script {
-          def changeLogSets = currentBuild.changeSets
-          for (int i = 0; i < changeLogSets.size(); i++) {
-            def entry = entries[j];
-            echo "${entry.commitId} by ${entry.author} on ${new Date(entry.timestamp)}: ${entry.map} - ${entry.msg}\n"
-          }
-        }
         cleanWs()
         git(url: 'https://github.com/psistats/ci-testing.git', credentialsId: 'psikon-ci-github-accoutn', branch: 'develop')
         sshagent(credentials: ['psikon-ci-github-ssh']) {
           script {
             sh 'git checkout develop'
+
+            script {
+              def changeLogSets = currentBuild.changeSets
+              for (int i = 0; i < changeLogSets.size(); i++) {
+                def entry = entries[j];
+                echo "${entry.commitId} by ${entry.author} on ${new Date(entry.timestamp)}: ${entry.map} - ${entry.msg}\n"
+              }
+            }
+
             withPythonEnv('psikon-py35') {
               pysh 'building/change_version.py --set-build=${BUILD_NUMBER}'
             }
