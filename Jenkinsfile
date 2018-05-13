@@ -94,7 +94,7 @@ pipeline {
     always {
       emailext (
         subject: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-        body: """SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER]':
+        body: """SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':
                  Check console output at ${env.BUILD_URL}""",
         recipientProviders: [[$class 'DevelopersRecipientProvider']]
       )
