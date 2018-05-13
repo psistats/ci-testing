@@ -34,10 +34,7 @@ pipeline {
       }
     }
     */
-    stage('cleanup') {
-      when { branch 'develop' }
-      steps {
-        
+       
     stage('set-build-number') {
       when { branch 'develop' }
       steps {
