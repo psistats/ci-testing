@@ -1,4 +1,7 @@
 pipeline {
+  parameters {
+    booleanParam(defaultValue: true, description: 'Execute pipeline?', name: 'shouldBuild')
+  }
   agent {
     node {
       label 'master'
@@ -11,8 +14,8 @@ pipeline {
         script {
           result = sh(script: "git log -1 | grep '.*\\[ci skip\\].*'", returnStatus: true)
           if (result == 0) {
-            echo ("'ci ksip' spotted in git commit. Aborting.")
-            success ("'ci skip' spotted in git commit. Aborting.")
+            echo ("'ci skip' spotted in git commit. Aborting.")
+            env.shouldBuild = false"
           }
         }
       }
@@ -22,8 +25,8 @@ pipeline {
         sh 'printenv'
       }
     }
-    /*
     stage('test-py35') {
+      when { expression { return shouldBuild } }
       steps {
         withPythonEnv('psikon-py35') {
           pysh 'tox -e py35'
@@ -31,6 +34,7 @@ pipeline {
       }
     }
     stage('test-py36') {
+      when { expression { return shouldBuild } }
       steps {
         withPythonEnv('psikon-py35') {
           pysh 'tox -e py36'
@@ -38,6 +42,7 @@ pipeline {
       }
     }
     stage('test-coverage') {
+      when { expression { return shouldBuild } }
       steps {
         withPythonEnv('psikon-py35') {
           pysh 'tox -e coverage'
@@ -48,6 +53,7 @@ pipeline {
        
     stage('set-build-number') {
       when { branch 'develop' }
+      when { expression { return shouldBuild } }
       steps {
         cleanWs()
         sshagent(credentials: ['psikon-ci-github-ssh']) {
