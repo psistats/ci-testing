@@ -27,11 +27,9 @@ pipeline {
 
             withPythonEnv('psikon-py35') {
               pysh 'building/change_version.py --set-build=${BUILD_NUMBER}'
-            }
-            sh 'git commit setup.py -m "Increasing build number [ci skip]"'
-            sh 'git push git@github.com:psistats/citest'
-
-            withPythonEnv('psikon-py35') {
+              sh 'git add setup.py'
+              sh 'git commit setup.py -m "Increasing build number [ci skip]"'
+              sh 'git push git@github.com:psistats/citest'
               pysh 'building/build_deb.sh'
             }
           }
