@@ -41,6 +41,12 @@ git commit -m "describe the feature"
 
 Jenkins Job Builder helps making jenkins projects easier.
 
+### Projects
+
+1. Testing and generating coverage, handles pull requests as well
+2. Generating snapshot releases
+3. Generating proper releases
+
 ### Plugins
 
 1. Cobertura Plugin
