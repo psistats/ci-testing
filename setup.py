@@ -16,6 +16,8 @@ setup(name='citest',
           'Programming Language :: Python :: 3.5',
           'Programming Language :: Python :: 3.6'
       ],
-      python_requires='>=3.5'
-
+      python_requires='>=3.5',
+      entry_points = {
+          'console_scripts': ['citest=citest.console:main']
+      }
 )
