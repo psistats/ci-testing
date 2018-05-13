@@ -52,7 +52,7 @@ pipeline {
           sh 'git checkout develop'
           sh 'git pull'
           sh 'git commit setup.py -m "Increasing build number"'
-          sh 'git push origin master'
+          sh 'git push origin develop'
         }
         */
       }
