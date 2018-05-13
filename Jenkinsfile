@@ -11,6 +11,7 @@ pipeline {
         sh 'printenv'
       }
     }
+    /*
     stage('test-py35') {
       steps {
         withPythonEnv('psikon-py35') {
@@ -32,18 +33,28 @@ pipeline {
         }
       }
     }
+    */
     stage('set-build-number') {
       when { branch 'develop' }
       steps {
+        sh 'git checkout develop'
+        sh 'git pull'
+        
         withPythonEnv('psikon-py35') {
           pysh 'building/change_version.py --set-build=${BUILD_NUMBER}'
         }
+
+        sh 'git commit setup.py -m "Increasing build number"'
+        sh 'git push origin master'
+
+        /*
         withCredentials([usernamePassword(credentialsId: 'psikon-ci-github-accoutn', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
           sh 'git checkout develop'
           sh 'git pull'
           sh 'git commit setup.py -m "Increasing build number"'
           sh 'git push origin master'
         }
+        */
       }
     }
   }
