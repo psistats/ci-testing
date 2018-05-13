@@ -27,7 +27,6 @@ pipeline {
       }
     }
     stage('test-py35') {
-      when { expression { return env.shouldBuild != "false" } }
       steps {
         withPythonEnv('psikon-py35') {
           pysh 'tox -e py35'
@@ -35,7 +34,6 @@ pipeline {
       }
     }
     stage('test-py36') {
-      when { expression { return env.shouldBuild != "false" } }
       steps {
         withPythonEnv('psikon-py35') {
           pysh 'tox -e py36'
