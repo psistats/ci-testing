@@ -1,0 +1,3 @@
+[
+  "tests/test_ci.py::test_ci"
+]

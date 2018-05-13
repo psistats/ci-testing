@@ -1,0 +1,24 @@
+node {
+  stage('test-py35') {
+    githubNotify context: 'psikon-ci/jenkins/testing/python3.5', status: 'PENDING'
+
+    ws("${JENKINS_HOME}/workspace/${JOB_NAME}/${BUILD_NUMBER}") {
+
+      
+      withPythonEnv('psikon-py35') {
+
+        def script = "tox -e py35"
+        
+        def errcode = sh script:script, returnStatus:true
+
+        if (errcode == 0) {
+          githubNotify context: 'psikon-ci/jenkins/testing/python3.5', status: 'SUCCESS'
+        } else {
+          githubNotify context: 'psikon-ci/jenkins/testing/python3.5', status: 'FAILURE'
+          error "Unit tests failed"
+        }
+      }
+    }
+  }
+}
+
