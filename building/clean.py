@@ -7,7 +7,8 @@ import glob
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
 PATHS = [
-    'psireporter/**/*.pyc',
+    'citest.egg-info',
+    '**/*.pyc',
     'htmlcov/',
     'deb_dist/',
     'dist/',
@@ -15,7 +16,7 @@ PATHS = [
     '.tox/',
     '.pytest_cache/',
     'build/',
-    '.coverage/',
+    '.coverage',
     'coverage.xml']
 
 ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..'))

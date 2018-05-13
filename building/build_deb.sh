@@ -16,10 +16,21 @@ cd $ROOT_DIR
 VERSION="$( python setup.py --version )"
 NAME="$( python setup.py --name )"
 
-if [ -z "$BUILD_NUMBER" ]
-then
-  BUILD_NUMBER=1
+if [[ $VERSION = *"dev"* ]]; then
+  echo ">>> DEV VERSION <<<"
+  IFS=".dev" read -r -a array <<< "$VERSION"
+  BUILD_NUMBER="${array[-1]}"
+  echo ">>> MAJOR:        ${array[0]}   <<<"
+  echo ">>> MINOR:        ${array[1]}   <<<"
+  echo ">>> PATCH:        ${array[2]}   <<<"
+  echo ">>> BUILD NUMBER: $BUILD_NUMBER <<<"
+  DEBIAN_VERSION="${array[0]}.${array[1]}.${array[2]}~dev$BUILD_NUMBER"
+else
+  DEBIAN_VERSION=$VERSION
 fi
+
+echo ">>> FINAL DEBIAN VERSION: $DEBIAN_VERSION <<<"
+  
 
 if [ -d "$DEB_DIST_DIR" ]; then
   rm -r $DEB_DIST_DIR
@@ -34,12 +45,12 @@ source $ENV_DIR/bin/activate
 pip install stdeb
 
 python setup.py sdist
-python setup.py --command-packages=stdeb.command sdist_dsc --debian-version "$BUILD_NUMBER"dev
+python setup.py --command-packages=stdeb.command sdist_dsc
 
 #cd $DIST_DIR
 
 #py2dsc $NAME-$VERSION.tar.gz
 
-cd $DEB_DIST_DIR/$NAME-$VERSION
+cd $DEB_DIST_DIR/$NAME-$DEBIAN_VERSION
 
 dpkg-buildpackage -rfakeroot -uc -us
