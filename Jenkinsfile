@@ -41,7 +41,7 @@ pipeline {
         cleanWs()
         sshagent(credentials: ['psikon-ci-github-ssh']) {
           script {
-            sh 'git clone ssh://git@github.com:psistats/ci-testing.git'
+            sh 'git clone git@github.com:psistats/ci-testing.git'
           }
         }
         sh 'git checkout develop'
@@ -65,7 +65,7 @@ pipeline {
 
         sshagent(credentials: ['psikon-ci-github-ssh']) {
           script {
-            sh 'git push ssh://git@github.com:psistats/ci-testing.git'
+            sh 'git push git@github.com:psistats/ci-testing.git'
           }
         }
 
