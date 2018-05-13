@@ -97,7 +97,7 @@ pipeline {
         body: """SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':
                  Check console output at ${env.BUILD_URL}""",
         to: 'ci@psikon.com',
-        recipientProviders: ['developers']
+        recipientProviders: [[$class: 'DevelopersRecipientProvider']]
       )
     }
   }
