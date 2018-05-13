@@ -57,9 +57,9 @@ pipeline {
           }
         }
         */
+        sh 'git remote set-url origin git@github.com:psistats/ci-testing.git'
 
         sshagent(credentials: ['psikon-ci-github-ssh']) {
-          sh 'git remote set-url origin git@github.com:psistats/ci-testing.git'
           sh 'git push origin develop'
         }
 
