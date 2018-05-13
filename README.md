@@ -37,6 +37,10 @@ git commit -m "describe the feature"
 
 ## Jenkins Setup
 
+### JJB
+
+Jenkins Job Builder helps making jenkins projects easier.
+
 ### Plugins
 
 1. Cobertura Plugin
