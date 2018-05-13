@@ -26,6 +26,7 @@ pipeline {
         sh 'printenv'
       }
     }
+    /*
     stage('test-py35') {
       steps {
         withPythonEnv('psikon-py35') {
@@ -57,6 +58,7 @@ pipeline {
         }
       }
     }
+    */
        
     stage('snapshot') {
       when { 
