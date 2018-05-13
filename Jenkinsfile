@@ -18,6 +18,7 @@ pipeline {
             env.shouldBuild = "false"
           }
         }
+        sh 'printenv'
       }
     }     
     stage('debug-output') {
@@ -58,6 +59,13 @@ pipeline {
         }
       }
     }
+    stage('snapshot') {
+      when {
+        branch 'develop'
+        expression { return env.shouldBuild != "false " }
+      }
+      steps {
+        build job: 'ci-testing-snapshot'
        
     stage('set-build-number') {
       when { 
@@ -65,6 +73,8 @@ pipeline {
         expression { return env.shouldBuild != "false" }
       }
       steps {
+        build (job: "ci-testing-jjb-snapshot")
+        /*
         cleanWs()
         sshagent(credentials: ['psikon-ci-github-ssh']) {
           script {
@@ -90,7 +100,7 @@ pipeline {
     }
   }
   post {
-    always {
+    success {
       emailext (
         subject: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
         body: """SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':

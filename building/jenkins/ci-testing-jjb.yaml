@@ -1,0 +1,11 @@
+- job:
+   name: ci-testing-jjb
+   project-type: multibranch
+   number-to-keep: '20'
+   scm:
+     - github:
+        repo: 'ci-testing'
+        repo-owner: 'psistats'
+        credentials-id: 'psikon-ci-github-accoutn'
+        discoverer-pr-forks-trust: nobody
+
