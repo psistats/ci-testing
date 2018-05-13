@@ -41,7 +41,7 @@ pipeline {
         cleanWs()
         sshagent(credentials: ['psikon-ci-github-ssh']) {
           script {
-            sh 'git clone git@github.com:psistats/ci-testing.git'
+            sh 'git clone git@github.com:psistats/ci-testing.git .'
             sh 'git checkout develop'
             withPythonEnv('psikon-py35') {
               pysh 'building/change_version.py --set-build=${BUILD_NUMBER}'
