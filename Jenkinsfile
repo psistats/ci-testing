@@ -51,8 +51,10 @@ pipeline {
     }
        
     stage('set-build-number') {
-      when { branch 'develop' }
-      when { expression { return shouldBuild != "false" } }
+      when { 
+        branch 'develop'
+        expression { return shouldBuild != "false" }
+      }
       steps {
         cleanWs()
         sshagent(credentials: ['psikon-ci-github-ssh']) {
