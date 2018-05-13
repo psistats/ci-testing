@@ -49,7 +49,6 @@ pipeline {
         }
       }
     }
-    */
        
     stage('set-build-number') {
       when { branch 'develop' }
