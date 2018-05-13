@@ -39,7 +39,9 @@ pipeline {
           pysh 'building/change_version.py --set-build=${BUILD_NUMBER}'
         }
         withCredentials([usernamePassword(credentialsId: 'psikon-ci-github-accoutn', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-          sh 'git commit -a -m "Increasing build number"'
+          sh 'git checkout develop'
+          sh 'git pull'
+          sh 'git commit setup.py -m "Increasing build number"'
           sh 'git push'
         }
       }
