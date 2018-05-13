@@ -8,5 +8,5 @@
               - '*/develop'
             url: https://github.com/psistats/ci-testing
             credentials-id: 'psikon-ci-github-accoutn'
-      script-path: building/jenkins/ci-testing-jjb-snapshot.groovy
+      script-path: building/jenkins/citest-snapshot.groovy
       lightweight-checkout: true
