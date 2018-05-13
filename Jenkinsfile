@@ -55,7 +55,7 @@ pipeline {
           maxNumberOfBuilds: 30,
           onlyStable: true,
           sourceEncoding: 'ASCII',
-          zoomCoverageChart: true
+          zoomCoverageChart: true])
         }
       }
     }
