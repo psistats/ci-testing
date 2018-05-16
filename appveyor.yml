@@ -8,10 +8,10 @@ environment:
           PYTHON_ARCH: "64"
 
 install:
-    -ECHO "Installed SDKs:"
-    -ps: "ls \"C:/Program Files/Microsoft SDKs/Windows\""
+    - ECHO "Installed SDKs:"
+    - ps: "ls \"C:/Program Files/Microsoft SDKs/Windows\""
 
-    -ps: if (-not(Test-Path($env:PYTHON))) { & appveyor\install.ps1 }
+    - ps: if (-not(Test-Path($env:PYTHON))) { & appveyor\install.ps1 }
 
     - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
 
