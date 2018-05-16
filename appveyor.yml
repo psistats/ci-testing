@@ -30,7 +30,7 @@ test_script:
 
 after_test:
     - "python setup.py bdist_wheel"
-    - "python setup.py bdhist_wininst"
+    - "python setup.py bdist_wininst"
     - "python setup.py bdist_msi"
     - ps: "ls dist"
 
