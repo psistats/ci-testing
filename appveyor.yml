@@ -31,6 +31,8 @@ test_script:
 after_test:
     - "python setup.py bdist_wheel"
     - "python setup.py bdist_wininst"
+    - "pip install pyinstaller pypiwin32"
+    - "pyinstaller citest\\w32\\console.py"
     - ps: "ls dist"
 
 artifacts:

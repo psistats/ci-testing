@@ -6,7 +6,7 @@ setup(name='citest',
       author='Alex Dow',
       author_email='adow@psikon.com',
       url='http://github.com/psistats/ci-testing',
-      packages=['citest'],
+      packages=['citest', 'citest.w32'],
       license='MIT',
       classifiers=[
           'Development Status :: 4 - Beta',
