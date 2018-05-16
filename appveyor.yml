@@ -20,18 +20,18 @@ install:
 
     - "python -m pip install --upgrade pip"
 
-    - "%CMD_IN_ENV% pip install -r dev-requirements.txt"
+    - "pip install -r dev-requirements.txt"
 
 build_script:
-    - "%CMD_IN_ENV% python setup.py build"
+    - "python setup.py build"
 
 test_script:
-    - "%CMD_IN_ENV% tox -e py35"
+    - "tox -e py35"
 
 after_test:
-    - "%CMD_IN_ENV% python setup.py bdist_wheel"
-    - "%CMD_IN_ENV% python setup.py bdhist_wininst"
-    - "%CMD_IN_ENV% python setup.py bdist_msi"
+    - "python setup.py bdist_wheel"
+    - "python setup.py bdhist_wininst"
+    - "python setup.py bdist_msi"
     - ps: "ls dist"
 
 artifacts:
