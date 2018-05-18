@@ -1,6 +1,6 @@
 node('master') {
     ws("${env.JEKNINS_HOME}/workspace/${env.JOB_NAME}") {
-        git url: 'https://github.com/psistats/citest.git'
+        git url: 'https://github.com/${env.JOB_NAME}'
         stage('prepare') {
             sh 'printenv'
         }
