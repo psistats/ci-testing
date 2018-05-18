@@ -35,7 +35,7 @@ node('master') {
 
                 withCredentials([string(credentialsId: 'appveyor-token', variable: 'APPVEYOR_TOKEN')]) {
                     echo '---> STARTING APPVEYOR <---'
-                    ref response = httpRequest(
+                    def response = httpRequest(
                         url: 'https://ci.appveyor.com/api/builds',
                         httpMode: 'POST',
                         customHeaders: (
