@@ -12,7 +12,7 @@ node('master') {
     ])
 
     ws("${env.JENKINS_HOME}/workspace/${env.JOB_NAME}") {
-        if (!binding.hasVariable("APPVEYOR") {
+        if (!binding.hasVariable("APPVEYOR")) {
             stage('prepare') {
                 def scmVars = checkout scm
                 echo "scmVars: ${scmVars}"
