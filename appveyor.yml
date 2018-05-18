@@ -1,6 +1,6 @@
 environment:
-    global:
-        CMD_IN_ENV: "cmd /E:ON /V:ON /C .\\appveyor\\run_with_env.cmd"
+    jenkins_token:
+        secure: Or2p4wJS6jiouN7kezvCCQ==
 
     matrix:
         - PYTHON: "C:\\Python35-x64"
@@ -20,6 +20,7 @@ install:
 
     - "python -m pip install --upgrade pip"
 
+    - "pip install -r w32-requirements.txt"
     - "pip install -r dev-requirements.txt"
 
 build_script:
@@ -29,12 +30,14 @@ test_script:
     - "tox -e py35"
 
 after_test:
-    - "python setup.py bdist_wheel"
-    - "python setup.py bdist_wininst"
-    - "pip install pyinstaller pypiwin32"
-    - "pyinstaller citest\\w32\\console.py"
+    - "building\winbuild.bat"
     - ps: "ls dist"
 
 artifacts:
     - path: dist\*
 
+deploy:
+    provider: Webhook
+    url: https://dev.psikon.org/jenkins/job/appveyor/build?token$(jenkins_token)
+    
+    
