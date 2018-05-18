@@ -1,7 +1,7 @@
 environment:
     jenkins_token:
-        secure: Or2p4wJS6jiouN7kezvCCQ==
-
+        secure: 7qqMKlxxhgpxUNhxIiL4XFYU9YBjM8vh6/AAkpD+QeLZJEwtcoaCTOGm1DSuLCit
+        
     matrix:
         - PYTHON: "C:\\Python35-x64"
           PYTHON_VERSION: "3.5.x"
@@ -38,5 +38,5 @@ artifacts:
 
 deploy:
     provider: Webhook
-    url: https://dev.psikon.org/jenkins/generic-webhook-trigger/invoke
+    url: "https://psikon-admin@$(jenkins_token)dev.psikon.org/jenkins/generic-webhook-trigger/invoke
     authorization: Bearer $(jenkins_token)
