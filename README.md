@@ -263,3 +263,8 @@ You should now see your jobs in Jenkins.
 
 
 
+## Appveyor Integration
+
+While having everything managed by Jenkins would be great, Windows isn't free. Thankfully, Appveyor is.
+
+The workflow with Appveyor is simple. It will build commits and try to trigger a build on Jenkins. Under certain circumstances, jenkins will download the artifact and place it in a folder.
