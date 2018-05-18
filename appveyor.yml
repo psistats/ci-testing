@@ -30,7 +30,7 @@ test_script:
     - "tox -e py35"
 
 after_test:
-    - "building\winbuild.bat"
+    - "building\\winbuild.bat"
     - ps: "ls dist"
 
 artifacts:
