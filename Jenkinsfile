@@ -32,7 +32,7 @@ node('master') {
                     failUnstable: false,
                     maxNumberOfBuilds: 30,
                     onlyStable: true,
-                    sourceEncoding: 'utf-8',
+                    sourceEncoding: 'ASCII',
                     zoomCoverageCharge: true
                 ])
             }
