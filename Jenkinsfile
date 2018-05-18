@@ -1,7 +1,8 @@
 node('master') {
     ws("${env.JENKINS_HOME}/workspace/${env.JOB_NAME}") {
         stage('prepare') {
-            git
+            def scmVars = checkout scm
+            echo "scmVars: ${scmVars}"
             sh 'printenv'
         }
         stage('test-py35') {
