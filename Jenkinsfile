@@ -1,5 +1,5 @@
 node('master') {
-    customWorkspace "${JEKNINS_HOME}/workspace/${JOB_NAME}"
+    customWorkspace "${env.JEKNINS_HOME}/workspace/${env.JOB_NAME}"
     git url: 'https://github.com/psistats/citest.git'
     stage('prepare') {
         sh 'printenv'
