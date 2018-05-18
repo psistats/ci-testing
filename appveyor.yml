@@ -1,6 +1,6 @@
 environment:
     jenkins_token:
-        secure: 7qqMKlxxhgpxUNhxIiL4XFYU9YBjM8vh6/AAkpD+QeLZJEwtcoaCTOGm1DSuLCit
+        secure: "7qqMKlxxhgpxUNhxIiL4XFYU9YBjM8vh6/AAkpD+QeLZJEwtcoaCTOGm1DSuLCit"
         
     matrix:
         - PYTHON: "C:\\Python35-x64"
