@@ -4,6 +4,10 @@ node {
     }
     stage('test-py35') {
         withPythonEnv('psikon-py35') {
+            pysh 'echo "--- CWD ---"'
+            pysh 'pwd'
+            pysh 'echo "--- LS  ---"'
+            pysh 'ls -al'
             pysh 'pip install tox'
             pysh 'tox -e py35'
         }
