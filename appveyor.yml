@@ -34,7 +34,7 @@ after_test:
     - ps: "ls dist"
 
 artifacts:
-    - path: dist\*
+    - path: dist\w32installer\*
 
 deploy:
     provider: Webhook
