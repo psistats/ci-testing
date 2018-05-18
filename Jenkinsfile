@@ -4,7 +4,7 @@ node('master') {
         pipelineTriggers([
             [$class: 'GenericTrigger',
                 genericVariables: [
-                    [expressionType: 'JSONPath', key: 'APPVEYOR_ARTIFACT', value: '$artifacts[0].url']
+                    [expressionType: 'JSONPath', key: 'APPVEYOR_ARTIFACT', value: '$.artifacts[0].url']
                 ]
             ]
         ])
