@@ -38,10 +38,10 @@ node('master') {
                     def response = httpRequest(
                         url: 'https://ci.appveyor.com/api/builds',
                         httpMode: 'POST',
-                        customHeaders: (
-                            [name: 'Authorization', value: 'Bearer ${APPVEYOR_TOKEN}'],
+                        customHeaders: [
+                            [name: 'Authorization', value: "Bearer ${APPVEYOR_TOKEN}"],
                             [name: 'Content-type', value: 'application/json']
-                        ),
+                        ],
 
                         requestBody: '''{
                             "accountName": "alex-dow",
