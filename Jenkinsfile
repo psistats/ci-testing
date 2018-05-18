@@ -1,6 +1,7 @@
 node('master') {
     ws("${env.JENKINS_HOME}/workspace/${env.JOB_NAME}") {
         stage('prepare') {
+            git
             sh 'printenv'
         }
         stage('test-py35') {
