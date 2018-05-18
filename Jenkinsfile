@@ -12,14 +12,12 @@ node('master') {
     ])
 
     ws("${env.JENKINS_HOME}/workspace/${env.JOB_NAME}") {
-        if (!binding.hasVariable("APPVEYOR") || APPVEYOR != 'True') {
+        if (!binding.hasVariable("APPVEYOR") {
             stage('prepare') {
                 def scmVars = checkout scm
                 echo "scmVars: ${scmVars}"
                 sh 'printenv'
                 echo "${env}"
-                echo "${APPVEYOR_ARTIFACT}"
-                echo "${APPVEYOR}"
             }
             stage('test-py35') {
                 withPythonEnv('psikon-py35') {
@@ -49,7 +47,7 @@ node('master') {
                     ])
                 }
             }
-        } else {
+        } else if (APPVEYOR == 'True')  {
             stage('post-appveyor') {
                 echo 'POST APPVEYOR'
             }
