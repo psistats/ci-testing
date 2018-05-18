@@ -15,7 +15,7 @@ node('master') {
             def scmVars = checkout scm
             echo "scmVars: ${scmVars}"
             sh 'printenv'
-            echo ${env}
+            echo "${env}"
         }
         stage('test-py35') {
             withPythonEnv('psikon-py35') {
