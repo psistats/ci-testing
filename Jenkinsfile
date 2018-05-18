@@ -34,6 +34,7 @@ node('master') {
             stage('test-w32') {
 
                 withCredentials([string(credentialsId: 'appveyor-token', variable: 'APPVEYOR_TOKEN')]) {
+                    echo '---> STARTING APPVEYOR <---'
                     ref response = httpRequest(
                         url: 'https://ci.appveyor.com/api/builds',
                         httpMode: 'POST',
@@ -47,7 +48,7 @@ node('master') {
                             "projectSlug": "citest",
                             "branch": "${svcVars.GIT_BRANCH}"
                         }'''
-                    );
+                    )
                     echo '---> APPVEYOR RESULTS <---'
                     echo response.getStatus();
                     echo response.getContent();
