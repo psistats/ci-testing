@@ -18,6 +18,7 @@ node('master') {
             sh 'printenv'
             echo "${env}"
             echo "${APPVEYOR_ARTIFACT}"
+            echo "${APPVEYOR}"
         }
         stage('test-py35') {
             withPythonEnv('psikon-py35') {
