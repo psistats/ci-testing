@@ -12,7 +12,7 @@ node {
         withPythonEnv('psikon-py36') {
             pysh 'pip install tox'
             pysh 'tox -e py36'
-        })
+        }
     }
     stage('test-coverage') {
         withPythonEnv('psikon-py35') {
