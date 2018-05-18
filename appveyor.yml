@@ -38,7 +38,7 @@ artifacts:
 
 deploy:
     provider: Webhook
-    url: https://dev.psikon.org/jenkins/job/appveyor/build
+    url: https://dev.psikon.org/jenkins/generic-webhook-trigger/invoke
     authorization: Bearer $(jenkins_token)
     
     
