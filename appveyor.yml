@@ -38,5 +38,5 @@ artifacts:
 
 deploy:
     provider: Webhook
-    url: "https://psikon-admin@$(jenkins_token)dev.psikon.org/jenkins/generic-webhook-trigger/invoke
+    url: "https://psikon-admin@$(jenkins_token)dev.psikon.org/jenkins/generic-webhook-trigger/invoke"
     authorization: Bearer $(jenkins_token)
