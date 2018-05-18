@@ -1,6 +1,5 @@
 node('master') {
     ws("${env.JENKINS_HOME}/workspace/${env.JOB_NAME}") {
-        git url: "https://github.com/${env.JOB_NAME}"
         stage('prepare') {
             sh 'printenv'
         }
