@@ -4,7 +4,8 @@ node('master') {
         pipelineTriggers([
             [$class: 'GenericTrigger',
                 genericVariables: [
-                    [expressionType: 'JSONPath', key: 'APPVEYOR_ARTIFACT', value: '$.artifacts[0].url']
+                    [expressionType: 'JSONPath', key: 'APPVEYOR_ARTIFACT', value: '$.artifacts[0].url'],
+                    [expressionType: 'JSONPath', key: 'APPVEYOR', value: '$.environmentVariables.appveyor']
                 ]
             ]
         ])
@@ -16,6 +17,7 @@ node('master') {
             echo "scmVars: ${scmVars}"
             sh 'printenv'
             echo "${env}"
+            echo "${APPVEYOR_ARTIFACT}"
         }
         stage('test-py35') {
             withPythonEnv('psikon-py35') {
