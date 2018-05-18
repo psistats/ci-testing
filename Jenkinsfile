@@ -31,6 +31,28 @@ node('master') {
                     pysh 'tox -e py36'
                 }
             }
+            stage('test-w32') {
+
+                withCredentials([string(credentialsId: 'appveyor-token', variable: 'APPVEYOR_TOKEN')]) {
+                    ref response = httpRequest(
+                        url: 'https://ci.appveyor.com/api/builds',
+                        httpMode: 'POST',
+                        customHeaders(
+                            [name: 'Authorization', value: 'Bearer ${APPVEYOR_TOKEN}'],
+                            [name: 'Content-type', value: 'application/json']
+                        ),
+
+                        requestBody: '''{
+                            "accountName": "alex-dow",
+                            "projectSlug": "citest",
+                            "branch": "${svcVars.GIT_BRANCH}"
+                        }'''
+                    );
+                    echo '---> APPVEYOR RESULTS <---'
+                    echo response.getStatus();
+                    echo response.getContent();
+                }
+            }
             stage('test-coverage') {
                 withPythonEnv('psikon-py35') {
                     pysh 'tox -e coverage'
