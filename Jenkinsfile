@@ -4,14 +4,12 @@ node {
     }
     stage('test-py35') {
         withPythonEnv('psikon-py35') {
-            pysh 'pip install tox'
-            pysh 'tox -e py35'
+            pysh 'pip install tox && tox -e py35'
         }
     }
     stage('test-py36') {
         withPythonEnv('psikon-py36') {
-            pysh 'pip install tox'
-            pysh 'tox -e py36'
+            pysh 'pip install tox && tox -e py36'
         }
     }
     stage('test-coverage') {
