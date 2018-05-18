@@ -1,4 +1,15 @@
 node('master') {
+
+    properties([
+        pipelineTriggers([
+            [$class: 'GenericTrigger',
+                genericVariables: [
+                    [expressionType: 'JSONPath', key: 'APPVEYOR_ARTIFACT', value: '$artifacts[0].url']
+                ]
+            ]
+        ])
+    ])
+
     ws("${env.JENKINS_HOME}/workspace/${env.JOB_NAME}") {
         stage('prepare') {
             def scmVars = checkout scm
