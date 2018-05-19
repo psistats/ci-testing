@@ -74,6 +74,7 @@ node('master') {
                         def response = httpRequest(
                             url: 'https://ci.appveyor.com/api/projects/alex-dow/citest/history?recordsNumber=5',
                             customHeaders: [
+                                [name: 'Content-type', value: 'application/json'],
                                 [name: 'Authorization', value: "Bearer ${APPVEYOR_TOKEN}"]
                             ]
                         )
