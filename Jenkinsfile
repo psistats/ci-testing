@@ -78,6 +78,7 @@ node('master') {
                                 [name: 'Authorization', value: "Bearer ${APPVEYOR_TOKEN}"]
                             ]
                         )
+                        parser = new groovy.json.JsonSlurper()
 
                         def buildContent = response.getContent();
                         echo "--> STATUS CONTENT: ${buildContent}";
