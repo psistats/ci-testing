@@ -33,7 +33,7 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
     def appveyor_finished = false;
 
 
-    while (appveyor_finished == false) {
+    while (appveyor_finished != true) {
         response = httpRequest(
             url: "https://ci.appveyor.com/api/projects/${accountName}/${projectSlug}/history?recordsNumber=5",
             customHeaders: [
