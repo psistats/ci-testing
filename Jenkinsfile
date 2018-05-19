@@ -54,7 +54,7 @@ node('master') {
                         httpMode: 'POST',
                         customHeaders: [
                             [name: 'Authorization', value: "Bearer ${APPVEYOR_TOKEN}"],
-                            [name: 'Content-type', value: 'application/json']
+                            [name: 'Accept', value: 'application/json']
                         ],
 
                         requestBody: body
