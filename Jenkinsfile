@@ -49,7 +49,7 @@ node('master') {
 
                     echo "Request body: ${body}"
 
-                    def response = httpRequest(
+                    response = httpRequest(
                         url: 'https://ci.appveyor.com/api/builds',
                         httpMode: 'POST',
                         customHeaders: [
