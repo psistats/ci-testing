@@ -37,7 +37,14 @@ after_test:
 artifacts:
     - path: dist\w32installer\*
 
-#deploy:
-#    provider: Webhook
-#    url: "https://dev.psikon.org/jenkins/generic-webhook-trigger/invoke"
-#    authorization: Basic $(auth_token)
+for:
+-
+    branches:
+        only:
+            - develop
+    deploy:
+        provider: Webhook
+        url: "https://dev.psikon.org/jenkins/generic-webhook-trigger/invoke"
+        authorization: Basic $(auth_token)
+
+
