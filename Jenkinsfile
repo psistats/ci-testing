@@ -54,7 +54,7 @@ node('master') {
                         httpMode: 'POST',
                         customHeaders: [
                             [name: 'Authorization', value: "Bearer ${APPVEYOR_TOKEN}"],
-                            [name: 'Accept', value: 'application/json']
+                            [name: 'Content-type', value: 'application/json']
                         ],
 
                         requestBody: body
@@ -71,16 +71,15 @@ node('master') {
 
                     while (appveyor_finished == false) {
 
-                        def response = httpRequest(
+                        def buildResponse = httpRequest(
                             url: 'https://ci.appveyor.com/api/projects/alex-dow/citest/history?recordsNumber=5',
                             customHeaders: [
-                                [name: 'Content-type', value: 'application/json'],
+                                [name: 'Accept', value: 'application/json'],
                                 [name: 'Authorization', value: "Bearer ${APPVEYOR_TOKEN}"]
                             ]
                         )
-                        parser = new groovy.json.JsonSlurper()
 
-                        def buildContent = response.getContent();
+                        def buildContent = buildResponse.getContent();
                         echo "--> STATUS CONTENT: ${buildContent}";
                         def buildObj = parser.parseText(buildContent);
 
