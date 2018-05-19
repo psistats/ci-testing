@@ -2,67 +2,65 @@ def debug(msg) {
     echo "[DEBUG] ${msg}"
 }
 
-def run_appveyor(credentialsId, accountName, projectSlug, branch, commitId) {
-    withCredentials([string(credentialsId: credentialsId, variable: 'APPVEYOR_TOKEN')]) {
-        debug('[APPVEYOR] Starting')
+def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
+    debug('[APPVEYOR] Starting')
 
-        def request_body = """{
-            "accountName": "${accountName}",
-            "projectSlug": "${projectSlug}",
-            "branch": "${branch}",
-            "commitId": "${commitId}"
-        }"""
+    def request_body = """{
+        "accountName": "${accountName}",
+        "projectSlug": "${projectSlug}",
+        "branch": "${branch}",
+        "commitId": "${commitId}"
+    }"""
 
+    response = httpRequest(
+        url: 'https://ci.appveyor.com/api/builds',
+        httpMode: 'POST',
+        customHeaders: [
+            [name: 'Authorization', value: "Bearer ${appveyor_token}"],
+            [name: 'Content-type', value: 'application/json']
+        ],
+        requestBody: request_body
+    )
+
+    def content = response.getContent()
+    def build_obj = new groovy.json.JsonSlurperClassic().parseText(content)
+
+    debug("[APPVEYOR] Build ID: ${build_obj.buildId}");
+
+    def appveyor_status;
+    def appveyor_finished = false;
+
+
+    while (appveyor_finished == false) {
         response = httpRequest(
-            url: 'https://ci.appveyor.com/api/builds',
-            httpMode: 'POST',
+            url: "https://ci.appveyor.com/api/projects/${accountName}/${projectSlug}/history?recordsNumber=5",
             customHeaders: [
-                [name: 'Authorization', value: "Bearer ${APPVEYOR_TOKEN}"],
-                [name: 'Content-type', value: 'application/json']
+                [name: 'Authorization', value: "Bearer ${appveyor_token}"]
             ],
             requestBody: request_body
         )
 
-        def content = response.getContent()
-        def build_obj = new groovy.json.JsonSlurperClassic().parseText(content)
+        build_data = response.getContent()
 
-        debug("[APPVEYOR] Build ID: ${build_obj.buildId}");
-
-        def appveyor_status;
-        def appveyor_finished = false;
-
-
-        while (appveyor_finished == false) {
-            response = httpRequest(
-                url: "https://ci.appveyor.com/api/projects/${accountName}/${projectSlug}/history?recordsNumber=5",
-                customHeaders: [
-                    [name: 'Authorization', value: "Bearer ${APPVEYOR_TOKEN}"]
-                ],
-                requestBody: request_body
-            )
-
-            build_data = response.getContent()
-
-            build_data.builds.each{ b ->
-                if (b.buildId == build_obj.buildId) {
-                    debug("[APPVEYOR] Build status: ${b.status}")
-                    if (b.status == "queued" || b.status == "running") {
-                        return;
-                    } else {
-                        appveyor_finished = true;
-                        appveyor_status   = b.status;
-                    }
+        build_data.builds.each{ b ->
+            if (b.buildId == build_obj.buildId) {
+                debug("[APPVEYOR] Build status: ${b.status}")
+                if (b.status == "queued" || b.status == "running") {
+                    return;
+                } else {
+                    appveyor_finished = true;
+                    appveyor_status   = b.status;
                 }
             }
-
-            sleep(5)
         }
 
-        debug("[APPVEYOR] Build completed - status: ${appveyor_status}")
+        sleep(5)
+    }
 
-        if (appveyor_status != "success") {
-            error("Appveyor build failed.")
-        }
+    debug("[APPVEYOR] Build completed - status: ${appveyor_status}")
+
+    if (appveyor_status != "success") {
+        error("Appveyor build failed.")
     }
 }
 
@@ -110,7 +108,9 @@ node('master') {
                 }
             }
             stage('test-w32') {
-                run_appveyor(APPVEYOR_TOKEN, APPVEYOR_OWNER, APPVEYOR_NAME, scmVars.GIT_BRANCH, scmVars.GIT_COMMIT)
+                withCredentials([string(credentialsId: APPVEYOR_TOKEN, variable: 'TOKEN')]) {
+                    run_appveyor(TOKEN, APPVEYOR_OWNER, APPVEYOR_NAME, scmVars.GIT_BRANCH, scmVars.GIT_COMMIT)
+                }
             }
             stage('test-coverage') {
                 withPythonEnv(PY35_TOOL_NAME) {
