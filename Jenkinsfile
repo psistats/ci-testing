@@ -44,7 +44,8 @@ node('master') {
                     def body = """{
                         "accountName": "alex-dow",
                         "projectSlug": "citest",
-                        "branch": "${scmVars.GIT_BRANCH}"
+                        "branch": "${scmVars.GIT_BRANCH}",
+                        "commitId": "${scmVars.GIT_COMMIT}"
                     }"""
 
                     response = httpRequest(
@@ -65,6 +66,7 @@ node('master') {
                     echo "--> BUILD ID: ${build.buildId}"
 
                     def appveyor_finished = false
+                    def appveyor_status;
 
                     while (appveyor_finished == false) {
 
@@ -82,6 +84,7 @@ node('master') {
                         echo "--> STATUS CONTENT: ${buildContent}";
                         def buildObj = new groovy.json.JsonSlurperClassic().parseText(buildContent);
 
+
                         buildObj.builds.each{ buildData ->
                             if (buildData.buildId == build.buildId) {
                                 echo "--> Build ID: ${build.buildId} - status: ${buildData.status}"
@@ -89,13 +92,22 @@ node('master') {
                                     return;
                                 } else {
                                     appveyor_finished = true;
+                                    appveyor_status = buildData.status;
                                     return;
                                 }
                             } else {
                                 return;
                             }
                         }
-                        sleep(5);
+
+                        if (apppveyor_finished == false) {
+                            sleep(5);
+                        }
+                    }
+
+                    if (appveyor_status != 'success') {
+                        echo "--> Appveyor status: ${appveyor_status}";
+                        error("Appveyor build was not successful");
                     }
                 }
             }

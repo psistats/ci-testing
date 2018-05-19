@@ -29,7 +29,7 @@ build_script:
     - "python setup.py build"
 
 test_script:
-    - "tox -e py35"
+    - "tox -e pywin"
 
 after_test:
     - "building\\winbuild.bat"
