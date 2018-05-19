@@ -58,7 +58,12 @@ node('master') {
                         requestBody: body
                     )
                     echo '---> APPVEYOR RESULTS <---'
-                    echo response.getContent();
+
+                    def content = response.getContent();
+                    def parser = new groovy.json.JsonSlurper();
+                    def build = parser.parseText(content);
+
+                    echo build;
                 }
             }
             stage('test-coverage') {
