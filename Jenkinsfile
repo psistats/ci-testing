@@ -86,11 +86,16 @@ node('master') {
 
                         buildObj.builds.each{ buildData ->
                             if (buildData.buildId == build.buildId) {
-                                echo "--> BUILD_STATUS: ${buildData.status}"
+                                if (buildData.status == "queued" || buildData.status == "running") {
+                                    return;
+                                } else {
+                                    appveyor_finished = true;
+                                }
                             } else {
                                 return;
                             }
                         }
+                        sleep(5000);
                     }
                 }
             }
