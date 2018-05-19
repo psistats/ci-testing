@@ -81,9 +81,7 @@ node('master') {
                         )
 
                         def buildContent = buildResponse.getContent();
-                        echo "--> STATUS CONTENT: ${buildContent}";
                         def buildObj = new groovy.json.JsonSlurperClassic().parseText(buildContent);
-
 
                         buildObj.builds.each{ buildData ->
                             if (buildData.buildId == build.buildId) {
