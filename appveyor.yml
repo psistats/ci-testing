@@ -3,7 +3,7 @@ environment:
         secure: "7qqMKlxxhgpxUNhxIiL4XFYU9YBjM8vh6/AAkpD+QeLZJEwtcoaCTOGm1DSuLCit"
     auth_token:
         secure: "w2PeplVJGcBOjNKEdUHhfspQzjaAEkqnW+oxbtWFBnGrzZdRup6ac1VAoZcIqvKfUOFGveVKertOgPsgM5eT4w=="
-        
+
     matrix:
         - PYTHON: "C:\\Python35-x64"
           PYTHON_VERSION: "3.5.x"
@@ -38,7 +38,7 @@ after_test:
 artifacts:
     - path: dist\w32installer\*
 
-deploy:
-    provider: Webhook
-    url: "https://dev.psikon.org/jenkins/generic-webhook-trigger/invoke"
-    authorization: Basic $(auth_token)
+#deploy:
+#    provider: Webhook
+#    url: "https://dev.psikon.org/jenkins/generic-webhook-trigger/invoke"
+#    authorization: Basic $(auth_token)
