@@ -45,7 +45,7 @@ node('master') {
                         "branch": "${scmVars.GIT_BRANCH}"
                     }'''
 
-                    echo 'Request body: ${body}'
+                    echo "Request body: ${body}"
 
                     try {
                         def response = httpRequest(
@@ -56,11 +56,7 @@ node('master') {
                                 [name: 'Content-type', value: 'application/json']
                             ],
 
-                            requestBody: '''{
-                                "accountName": "alex-dow",
-                                "projectSlug": "citest",
-                                "branch": "${scmVars.GIT_BRANCH}"
-                            }'''
+                            requestBody: body
                         )
                         echo '---> APPVEYOR RESULTS <---'
                         echo response.getStatus();
