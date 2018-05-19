@@ -35,23 +35,27 @@ node('master') {
 
                 withCredentials([string(credentialsId: 'appveyor-token', variable: 'APPVEYOR_TOKEN')]) {
                     echo '---> STARTING APPVEYOR <---'
-                    def response = httpRequest(
-                        url: 'https://ci.appveyor.com/api/builds',
-                        httpMode: 'POST',
-                        customHeaders: [
-                            [name: 'Authorization', value: "Bearer ${APPVEYOR_TOKEN}"],
-                            [name: 'Content-type', value: 'application/json']
-                        ],
+                    try {
+                        def response = httpRequest(
+                            url: 'https://ci.appveyor.com/api/builds',
+                            httpMode: 'POST',
+                            customHeaders: [
+                                [name: 'Authorization', value: "Bearer ${APPVEYOR_TOKEN}"],
+                                [name: 'Content-type', value: 'application/json']
+                            ],
 
-                        requestBody: '''{
-                            "accountName": "alex-dow",
-                            "projectSlug": "citest",
-                            "branch": "${svcVars.GIT_BRANCH}"
-                        }'''
-                    )
-                    echo '---> APPVEYOR RESULTS <---'
-                    echo response.getStatus();
-                    echo response.getContent();
+                            requestBody: '''{
+                                "accountName": "alex-dow",
+                                "projectSlug": "citest",
+                                "branch": "appveyor_support"
+                            }'''
+                        )
+                        echo '---> APPVEYOR RESULTS <---'
+                        echo response.getStatus();
+                        echo response.getContent();
+                    } catch (Exception e) {
+                        echo e.getMessage();
+                    }
                 }
             }
             stage('test-coverage') {
