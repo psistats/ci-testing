@@ -66,6 +66,29 @@ node('master') {
                     def build = parser.parseText(content);
 
                     echo "--> BUILD ID: ${build.buildId}"
+
+                    def appveyor_finished = false
+
+                    while (appveyor_finished != true) {
+
+                        def response = httpRequest(
+                            url: 'https://ci.appveyor.com/api/projects/alex-dow/citest/history?recordsNumber=5',
+                            customHeaders: [
+                                [name: 'Authorization', value: "Bearer ${APPVEYOR_TOKEN}"]
+                            ]
+                        )
+
+                        def buildContent = response.getContent();
+                        def buildObj = parser.parseText(buildContent);
+
+                        buildObj.builds.each{ buildData =>
+                            if (buildData.buildId == build.buildId) {
+                                echo "--> BUILD_STATUS = ${buildData.status}"
+                            } else {
+                                return;
+                            }
+                        }
+                    }
                 }
             }
             /*
