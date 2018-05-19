@@ -36,6 +36,7 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
     while (appveyor_finished != true) {
         response = httpRequest(
             url: "https://ci.appveyor.com/api/projects/${accountName}/${projectSlug}/history?recordsNumber=5",
+            httpMode: 'GET',
             customHeaders: [
                 [name: 'Authorization', value: "Bearer ${appveyor_token}"],
                 [name: 'Accept', value: 'application/json']
