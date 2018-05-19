@@ -69,7 +69,7 @@ node('master') {
 
                     def appveyor_finished = false
 
-                    while (appveyor_finished != true) {
+                    while (appveyor_finished == false) {
 
                         def response = httpRequest(
                             url: 'https://ci.appveyor.com/api/projects/alex-dow/citest/history?recordsNumber=5',
@@ -85,7 +85,7 @@ node('master') {
 
                         buildObj.builds.each{ buildData ->
                             if (buildData.buildId == build.buildId) {
-                                echo "--> BUILD_STATUS = ${buildData.status}"
+                                echo "--> BUILD_STATUS: ${buildData.status}"
                             } else {
                                 return;
                             }
