@@ -47,8 +47,6 @@ node('master') {
                         "branch": "${scmVars.GIT_BRANCH}"
                     }"""
 
-                    echo "Request body: ${body}"
-
                     response = httpRequest(
                         url: 'https://ci.appveyor.com/api/builds',
                         httpMode: 'POST',
@@ -86,10 +84,12 @@ node('master') {
 
                         buildObj.builds.each{ buildData ->
                             if (buildData.buildId == build.buildId) {
+                                echo "--> Build ID: ${build.buildId} - status: ${buildData.status}"
                                 if (buildData.status == "queued" || buildData.status == "running") {
                                     return;
                                 } else {
                                     appveyor_finished = true;
+                                    return;
                                 }
                             } else {
                                 return;
