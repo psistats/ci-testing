@@ -38,6 +38,15 @@ node('master') {
 
                 withCredentials([string(credentialsId: 'appveyor-token', variable: 'APPVEYOR_TOKEN')]) {
                     echo '---> STARTING APPVEYOR <---'
+
+                    def body = '''{
+                        "accountName": "alex-dow",
+                        "projectSlug": "citest",
+                        "branch": "${scmVars.GIT_BRANCH}"
+                    }'''
+
+                    echo 'Request body: ${body}'
+
                     try {
                         def response = httpRequest(
                             url: 'https://ci.appveyor.com/api/builds',
