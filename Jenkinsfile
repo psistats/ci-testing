@@ -62,7 +62,7 @@ node('master') {
                     echo '---> APPVEYOR RESULTS <---'
 
                     def content = response.getContent();
-                    def build = new groovy.json.JsonSlurper().parseText(content);
+                    def build = new groovy.json.JsonSlurperClassic().parseText(content);
 
                     echo "--> BUILD ID: ${build.buildId}"
 
@@ -82,7 +82,7 @@ node('master') {
 
                         def buildContent = buildResponse.getContent();
                         echo "--> STATUS CONTENT: ${buildContent}";
-                        def buildObj = new groovy.json.JsonSlurper().parseText(buildContent);
+                        def buildObj = new groovy.json.JsonSlurperClassic().parseText(buildContent);
 
                         buildObj.builds.each{ buildData ->
                             if (buildData.buildId == build.buildId) {
