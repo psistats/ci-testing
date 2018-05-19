@@ -42,6 +42,11 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
             ]
         )
 
+        content = response.getContent();
+
+        debug("[APPVEYOR] ${content}")
+
+
         def build_data = new groovy.json.JsonSlurperClassic().parseText(response.getContent())
 
         build_data.builds.each{ b ->
