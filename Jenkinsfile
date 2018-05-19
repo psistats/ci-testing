@@ -80,6 +80,7 @@ node('master') {
                         )
 
                         def buildContent = response.getContent();
+                        echo "--> STATUS CONTENT: ${buildContent}";
                         def buildObj = parser.parseText(buildContent);
 
                         buildObj.builds.each{ buildData ->
