@@ -100,7 +100,7 @@ node('master') {
                             }
                         }
 
-                        if (apppveyor_finished == false) {
+                        if (appveyor_finished == false) {
                             sleep(5);
                         }
                     }
