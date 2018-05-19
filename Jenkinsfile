@@ -47,23 +47,18 @@ node('master') {
 
                     echo "Request body: ${body}"
 
-                    try {
-                        def response = httpRequest(
-                            url: 'https://ci.appveyor.com/api/builds',
-                            httpMode: 'POST',
-                            customHeaders: [
-                                [name: 'Authorization', value: "Bearer ${APPVEYOR_TOKEN}"],
-                                [name: 'Content-type', value: 'application/json']
-                            ],
+                    def response = httpRequest(
+                        url: 'https://ci.appveyor.com/api/builds',
+                        httpMode: 'POST',
+                        customHeaders: [
+                            [name: 'Authorization', value: "Bearer ${APPVEYOR_TOKEN}"],
+                            [name: 'Content-type', value: 'application/json']
+                        ],
 
-                            requestBody: body
-                        )
-                        echo '---> APPVEYOR RESULTS <---'
-                        echo response.getStatus();
-                        echo response.getContent();
-                    } catch (Exception e) {
-                        echo e.getMessage();
-                    }
+                        requestBody: body
+                    )
+                    echo '---> APPVEYOR RESULTS <---'
+                    echo response.getContent();
                 }
             }
             stage('test-coverage') {
