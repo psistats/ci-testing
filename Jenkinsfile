@@ -27,7 +27,7 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
 
     debug("[APPVEYOR] Build ID: ${build_obj.buildId}");
 
-    def appveyor_status;
+    def appveyor_status = 'n/a';
     def appveyor_finished = false;
 
 
@@ -40,7 +40,7 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
             requestBody: request_body
         )
 
-        build_data = response.getContent()
+        def build_data = response.getContent()
 
         build_data.builds.each{ b ->
             if (b.buildId == build_obj.buildId) {
