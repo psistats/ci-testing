@@ -2,7 +2,7 @@ def debug(msg) {
     echo "[DEBUG] ${msg}"
 }
 
-def run_appveyor(credentialsId, accountName, projectSlub, branch, commitId) {
+def run_appveyor(credentialsId, accountName, projectSlug, branch, commitId) {
     withCredentials([string(credentialsId: credentialsId, variable: 'APPVEYOR_TOKEN')]) {
         debug('[APPVEYOR] Starting')
 
