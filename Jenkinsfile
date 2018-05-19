@@ -62,14 +62,15 @@ node('master') {
                     echo '---> APPVEYOR RESULTS <---'
 
                     def content = response.getContent();
-                    def parser = new groovy.json.JsonSlurper();
-                    def build = parser.parseText(content);
+                    def build = new groovy.json.JsonSlurper().parseText(content);
 
                     echo "--> BUILD ID: ${build.buildId}"
 
                     def appveyor_finished = false
 
                     while (appveyor_finished == false) {
+
+                        echo "--> CHEKCING BUILD STATUS"
 
                         def buildResponse = httpRequest(
                             url: 'https://ci.appveyor.com/api/projects/alex-dow/citest/history?recordsNumber=5',
@@ -81,7 +82,7 @@ node('master') {
 
                         def buildContent = buildResponse.getContent();
                         echo "--> STATUS CONTENT: ${buildContent}";
-                        def buildObj = parser.parseText(buildContent);
+                        def buildObj = new groovy.json.JsonSlurper().parseText(buildContent);
 
                         buildObj.builds.each{ buildData ->
                             if (buildData.buildId == build.buildId) {
