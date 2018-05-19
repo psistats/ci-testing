@@ -42,7 +42,7 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
             requestBody: request_body
         )
 
-        def build_data = jsonParser.parseText(response.getContent())
+        def build_data = new groovy.json.JsonSlurperClassic().parseText(response.getContent())
 
         build_data.builds.each{ b ->
             if (b.buildId == build_obj.buildId) {
