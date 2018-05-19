@@ -22,6 +22,7 @@ node('master') {
                 sh 'printenv'
                 echo "${env}"
             }
+            /*
             stage('test-py35') {
                 withPythonEnv('psikon-py35') {
                     pysh 'pip install tox'
@@ -34,6 +35,7 @@ node('master') {
                     pysh 'tox -e py36'
                 }
             }
+            */
             stage('test-w32') {
 
                 withCredentials([string(credentialsId: 'appveyor-token', variable: 'APPVEYOR_TOKEN')]) {
@@ -66,6 +68,7 @@ node('master') {
                     echo build;
                 }
             }
+            /*
             stage('test-coverage') {
                 withPythonEnv('psikon-py35') {
                     pysh 'tox -e coverage'
@@ -82,6 +85,7 @@ node('master') {
                     ])
                 }
             }
+            */
         } else if (env.APPVEYOR == 'True')  {
             stage('post-appveyor') {
                 echo 'POST APPVEYOR'
