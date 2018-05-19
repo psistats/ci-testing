@@ -39,8 +39,7 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
             customHeaders: [
                 [name: 'Authorization', value: "Bearer ${appveyor_token}"],
                 [name: 'Accept', value: 'application/json']
-            ],
-            requestBody: request_body
+            ]
         )
 
         def build_data = new groovy.json.JsonSlurperClassic().parseText(response.getContent())
