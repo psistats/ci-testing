@@ -12,7 +12,7 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
         "commitId": "${commitId}"
     }"""
 
-    response = httpRequest(
+    def build_response = httpRequest(
         url: 'https://ci.appveyor.com/api/builds',
         httpMode: 'POST',
         customHeaders: [
@@ -22,10 +22,8 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
         requestBody: request_body
     )
 
-    def content = response.getContent()
-    def jsonParser = new groovy.json.JsonSlurperClassic()
-
-    def build_obj = jsonParser.parseText(content)
+    def content = build_response.getContent()
+    def build_obj = readJSON(text: content)
 
     debug("[APPVEYOR] Build ID: ${build_obj.buildId}");
 
@@ -34,7 +32,7 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
 
 
     while (appveyor_finished != true) {
-        response = httpRequest(
+        def status_response = httpRequest(
             url: "https://ci.appveyor.com/api/projects/${accountName}/${projectSlug}/history?recordsNumber=5",
             httpMode: 'GET',
             customHeaders: [
@@ -43,12 +41,8 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
             ]
         )
 
-        content = response.getContent();
-
-        debug("[APPVEYOR] ${content}")
-
-
-        def build_data = new groovy.json.JsonSlurperClassic().parseText(response.getContent())
+        def status_content = status_response.getContent();
+        def build_data = readJSON(text: status_content)
 
         build_data.builds.each{ b ->
             if (b.buildId == build_obj.buildId) {
