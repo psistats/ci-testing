@@ -12,9 +12,12 @@ node('master') {
     ])
 
     ws("${env.JENKINS_HOME}/workspace/${env.JOB_NAME}") {
+
+        def scmVars;
+
         if (env.APPVEYOR == null) {
             stage('prepare') {
-                def scmVars = checkout scm
+                scmVars = checkout scm
                 echo "scmVars: ${scmVars}"
                 sh 'printenv'
                 echo "${env}"
@@ -47,7 +50,7 @@ node('master') {
                             requestBody: '''{
                                 "accountName": "alex-dow",
                                 "projectSlug": "citest",
-                                "branch": "appveyor_support"
+                                "branch": "${scmVars.GIT_BRANCH}"
                             }'''
                         )
                         echo '---> APPVEYOR RESULTS <---'
