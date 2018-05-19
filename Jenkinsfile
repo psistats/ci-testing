@@ -65,7 +65,7 @@ node('master') {
                     def parser = new groovy.json.JsonSlurper();
                     def build = parser.parseText(content);
 
-                    echo build;
+                    echo "--> BUILD ID: ${build.buildId}"
                 }
             }
             /*
