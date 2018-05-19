@@ -81,7 +81,7 @@ node('master') {
                         def buildContent = response.getContent();
                         def buildObj = parser.parseText(buildContent);
 
-                        buildObj.builds.each{ buildData =>
+                        buildObj.builds.each{ buildData ->
                             if (buildData.buildId == build.buildId) {
                                 echo "--> BUILD_STATUS = ${buildData.status}"
                             } else {
