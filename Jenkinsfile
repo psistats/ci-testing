@@ -95,7 +95,7 @@ node('master') {
                                 return;
                             }
                         }
-                        sleep(5000);
+                        sleep(5);
                     }
                 }
             }
