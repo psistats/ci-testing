@@ -23,7 +23,6 @@ init:
             $env:SKIP_DEPLOY="true"
         }
 
-
 install:
     - ECHO "Installed SDKs:"
     - ps: "ls \"C:/Program Files/Microsoft SDKs/Windows\""
