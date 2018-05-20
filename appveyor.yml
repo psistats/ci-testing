@@ -37,6 +37,9 @@ test_script:
 
 for:
 -
+    only_commits:
+        message: /\[deploy\]/
+
     branches:
         only:
             - develop
