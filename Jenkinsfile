@@ -186,7 +186,7 @@ node('master') {
                     env.APPVEYOR_ARTIFACTS.each{ artifact ->
                         pysh "python building/download_appveyor_artifact.py %{artifact.url} %{artifact.fileName}"
                     }
-                    archiveArtifacts artifacts: "artifact_downloads/*.exe"
+                    archiveArtifacts artifacts: "artifact_download/*.exe"
                 }
             }
         }
