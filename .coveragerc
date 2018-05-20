@@ -11,7 +11,8 @@ omit =
 include = citest/*
 branch = True
 source = citest/
-data_file = reports/coverage/coverage.dat
+data_file = reports/coverage/raw_data/coverage
+parallel = True
 
 
 [report]

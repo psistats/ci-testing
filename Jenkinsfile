@@ -105,7 +105,9 @@ node('master') {
                     [expressionType: 'JSONPath', key: 'APPVEYOR', value: '$.environmentVariables.appveyor'],
                     [expressionType: 'JSONPath', key: 'APPVEYOR_BUILD_ID', value: '$.buildId'],
                     [expressionType: 'JSONPath', key: 'APPVEYOR_BUILD_NUMBER', value: '$.buildNumber'],
-                    [expressionType: 'JSONPath', key: 'APPVEYOR_BUILD_VERSION', value: '$.buildVersion']
+                    [expressionType: 'JSONPath', key: 'APPVEYOR_BUILD_VERSION', value: '$.buildVersion'],
+                    [expressionType: 'JSONPath', key: 'APPVEYOR_COVERAGE_REPORT', value: '$.environmentVariables.COVERAGE'],
+                    [expressionType: 'JSONPath', key: 'APPVEYOR_NEW_ARTIFACT', value: '$.environmentVariables.NEW_ARTIFACT']
                 ]
             ]
         ])
@@ -142,15 +144,19 @@ node('master') {
                         run_appveyor(TOKEN, APPVEYOR_OWNER, APPVEYOR_NAME, scmVars.GIT_BRANCH, scmVars.GIT_COMMIT)
                     }
                 }
-                /*
 
                 stage('test-coverage') {
                     withPythonEnv(PY35_TOOL_NAME) {
                         pysh 'tox -e coverage'
+                    }
+                }
+
+                /*
+
                         step([$class: 'CoberturaPublisher',
                             autoUpdateHealth: false,
                             autoUpdateStability: false,
-                            coberturaReportFile: 'coverage.xml',
+                            coberturaReportFile: 'reports/coverage/jenkins-coverage.xml',
                             failUnhealthy: false,
                             failUnstable: false,
                             maxNumberOfBuilds: 30,
@@ -159,17 +165,19 @@ node('master') {
                             zoomCoverageCharge: true
                         ])
                     }
-                }*/
+                }
+                */
 
 
 
 
                 if (scmVars.GIT_BRANCH == 'develop') {
+                    // A commit to branch means changing the build number
                     stage('set-build-number') {
                         withPythonEnv(PY35_TOOL_NAME) {
                             pysh "python building/change_version --set-build=${env.BUILD_NUMBER}"
                         }
-                        sh 'git commit -am "Increase build number [ci skip]"'
+                        sh 'git commit -am "Increase build number [deploy]"'
                         sh 'git push'
                     }
                     stage('build-debian') {
@@ -180,18 +188,43 @@ node('master') {
                 }
             }
         } else if (env.APPVEYOR == 'True')  {
-            stage('deploy-appveyor-build') {
-                withPythonEnv(PY35_TOOL_NAME) {
-                    debug("Downloading appveyor artifacts: ${env.APPVEYOR_ARTIFACTS}")
 
-                    def artifacts = new groovy.json.JsonSlurperClassic().parseText(env.APPVEYOR_ARTIFACTS)
+            stage('appveyor-download-artifacts') {
+                def artifacts = new groovy.json.JsonSlurperClassic().parseText(env.APPVEYOR_ARTIFACTS)
+                for (int i = 0; i < artifacts.size(); i++) {
+                    def artifact = artifacts[i]
+                    pysh "python building/download_appveyor_artifact.py \"${artifact.url}\" \"${artifact.fileName}\""
+                }
+            }
 
-                    for (int i = 0; i < artifacts.size(); i++) {
-                        def artifact = artifacts[i]
-                        debug("Downloading: ${artifact}")
-                        pysh "python building/download_appveyor_artifact.py \"${artifact.url}\" \"${artifact.fileName}\""
+            if (env.APPVEYOR_NEW_ARTIFACT == 'true') {
+                stage('deploy-appveyor-build') {
+                    withPythonEnv(PY35_TOOL_NAME) {
+                        archiveArtifacts artifacts: "artifact_download/*.exe"
                     }
-                    archiveArtifacts artifacts: "artifact_download/*.exe"
+                }
+            }
+
+            if (env.APPVEYOR_COVERAGE == 'true') {
+                stage('publish-all-coverage') {
+                    withPythonEnv(PY35_TOOL_NAME) {
+                        sh 'cp artifact_dowloads/coverage.dat reports/coverage/coverage-win.dat'
+                        pysh 'pip install coverage'
+
+
+        }
+
+        if (env.APPVEYOR_COVERAGE == 'true') {
+            stage('publish-all-coverage') {
+                withPythonEnv(PY35_TOOL_NAME) {
+                    debug("Publishing all coverage reports")
+
+                    pysh 'cp artifact_downloads/coverage.dat reports/coverage/coverage-win.dat'
+                    pysh 'pip install coverage'
+                    pysh 'coverage combine reports/coverage/raw_data'
+                    pysh 'coverage report'
+                    pysh 'coverage html'
+                    pysh 'coverage xml'
                 }
             }
         }
