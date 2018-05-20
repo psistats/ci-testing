@@ -2,6 +2,13 @@ def debug(msg) {
     echo "[DEBUG] ${msg}"
 }
 
+def should_skip() {
+    result = sh (script: "git log -1 | grep '.*\\[ci skip\\].*'", returnStatus: true)
+    if (result == 0) {
+        env.CI_SKIP == "true"
+    }
+}
+
 def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
     debug('[APPVEYOR] Starting')
 
@@ -66,6 +73,8 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
     }
 }
 
+
+
 node('master') {
 
     def PROJECT_OWNER = 'psistats'
@@ -99,42 +108,62 @@ node('master') {
         if (env.APPVEYOR == null) {
             stage('prepare') {
                 scmVars = checkout scm
+                should_skip()
             }
-            stage('test-py35') {
-                withPythonEnv(PY35_TOOL_NAME) {
-                    pysh 'pip install tox'
-                    pysh 'tox -e py35'
+
+            if (env.CI_SKIP != "true") {
+
+                stage('test-py35') {
+                    withPythonEnv(PY35_TOOL_NAME) {
+                        pysh 'pip install tox'
+                        pysh 'tox -e py35'
+                    }
+                }
+                stage('test-py36') {
+                    withPythonEnv(PY36_TOOL_NAME) {
+                        pysh 'pip install tox'
+                        pysh 'tox -e py36'
+                    }
+                }
+                stage('test-w32') {
+                    withCredentials([string(credentialsId: APPVEYOR_TOKEN, variable: 'TOKEN')]) {
+                        run_appveyor(TOKEN, APPVEYOR_OWNER, APPVEYOR_NAME, scmVars.GIT_BRANCH, scmVars.GIT_COMMIT)
+                    }
+                }
+                stage('test-coverage') {
+                    withPythonEnv(PY35_TOOL_NAME) {
+                        pysh 'tox -e coverage'
+                        step([$class: 'CoberturaPublisher',
+                            autoUpdateHealth: false,
+                            autoUpdateStability: false,
+                            coberturaReportFile: 'coverage.xml',
+                            failUnhealthy: false,
+                            failUnstable: false,
+                            maxNumberOfBuilds: 30,
+                            onlyStable: true,
+                            sourceEncoding: 'ASCII',
+                            zoomCoverageCharge: true
+                        ])
+                    }
+                }
+
+                if (scmVars.GIT_BRANCH == 'develop') {
+                    stage('set-build-number') {
+                        withPythonEnv(PY35_TOOL_NAME) {
+                            pysh "python building/change_version --set-build=${env.BUILD_NUMBER}"
+                        }
+                        sh 'git commit -am "Increase build number [ci skip]"'
+                        sh 'git push'
+                    }
+                    stage('build-debian') {
+                        withPythonEnv(PY35_TOOL_NAME) {
+                            pysh "python building/build_deb.py"
+                        }
+                    }
                 }
             }
-            stage('test-py36') {
-                withPythonEnv(PY36_TOOL_NAME) {
-                    pysh 'pip install tox'
-                    pysh 'tox -e py36'
-                }
-            }
-            stage('test-w32') {
-                withCredentials([string(credentialsId: APPVEYOR_TOKEN, variable: 'TOKEN')]) {
-                    run_appveyor(TOKEN, APPVEYOR_OWNER, APPVEYOR_NAME, scmVars.GIT_BRANCH, scmVars.GIT_COMMIT)
-                }
-            }
-            stage('test-coverage') {
-                withPythonEnv(PY35_TOOL_NAME) {
-                    pysh 'tox -e coverage'
-                    step([$class: 'CoberturaPublisher',
-                        autoUpdateHealth: false,
-                        autoUpdateStability: false,
-                        coberturaReportFile: 'coverage.xml',
-                        failUnhealthy: false,
-                        failUnstable: false,
-                        maxNumberOfBuilds: 30,
-                        onlyStable: true,
-                        sourceEncoding: 'ASCII',
-                        zoomCoverageCharge: true
-                    ])
-                }
-            }
-        } else if (env.APPVEYOR == 'True')  {
-            stage('post-appveyor') {
+        } else if (env.APPVEYOR == 'True' && scmVars.GIT_BRANCH == 'develop')  {
+            stage('deploy-appveyor-build') {
                 echo 'POST APPVEYOR'
             }
         }

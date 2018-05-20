@@ -1,50 +1,30 @@
+from build_shared import log, exec_cmd, stream_cmd, project_dir, project_version, project_name
 import sys
 import os
 import subprocess
 
 ISCC=os.path.join('c:/','Program Files (x86)','Inno Setup 5','iscc.exe')
 
-def log(msg):
-    print('[INFO] %s' % msg)
+PROJECT_NAME = project_name()
+PROJECT_VERSION = project_version()
+PROJECT_DIR = project_dir()
 
-my_dir = os.path.dirname(os.path.realpath(__file__))
+WINDOWS_VERSION = PROJECT_VERSION
 
-project_dir = os.path.realpath(os.path.join(my_dir, '..'))
+# Have to convert python version of [x].[y].[z].dev[b] to
+# windows version of [x].[y].[z].[b]
+if '.dev' in PROJECT_VERSION:
+    verparts = PROJECT_VERSION.split('.dev')
+    WINDOWS_VERSION + '%s.%s' % (verparts[0], verparts[1])
 
-log('Project Directory: %s' % project_dir)
+log('Project Directory: %s' % PROJECT_DIR)
 
-os.chdir(project_dir)
-
-
-def exec_cmd(cmd):
-    result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    if result.returncode != 0:
-        raise RuntimeError("Command failed: %s" % result.returncode)
-    
-    return result.stdout
-
-def stream_cmd(cmd):
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-    while True:
-        line = process.stdout.readline().rstrip()
-        if not line:
-            break;
-        yield line
-     
-    process.communicate()
-    if process.returncode != 0:
-        raise RuntimeError("Command failed: %s" % process.returncode)
-        
-
-project_version = exec_cmd(['python', 'setup.py', '--version']).decode('utf-8').strip()
-project_name    = exec_cmd(['python', 'setup.py', '--name']).decode('utf-8').strip()
-
-log('%s:%s' % (project_name, project_version))
+os.chdir(PROJECT_DIR)
 
 cmds = [
     ['pyinstaller', 'citest\\w32\\console.py'],
     ['pyinstaller', 'citest\\w32\\service.py'],
-    [ISCC, 'building\\w32installer.iss', '/DMyAppVersion=%s' % project_version]
+    [ISCC, 'building\\w32installer.iss', '/DMyAppVersion=%s' % windows_version]
 ]
 
 for cmd in cmds:
