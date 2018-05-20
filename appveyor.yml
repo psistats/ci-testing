@@ -15,7 +15,12 @@ environment:
 skip_branch_with_pr: true
 
 init:
-    - ps: if ($env:APPVEYOR_REPO_COMMIT_MESSAGE -like "*\[deploy\]*") { $env:SKIP_DEPLOY="false" }
+    - ps: |
+        echo "Commit message: $env:APPVEYOR_REPO_COMMIT_MESSAGE"
+        if ($env:APPVEYOR_REPO_COMMIT_MESSAGE -like "*\[deploy\]*") {
+            $env:SKIP_DEPLOY="false"
+        }
+
 
 install:
     - ECHO "Installed SDKs:"
@@ -42,6 +47,7 @@ for:
 -
     before_deploy:
         - ps: |
+            echo "Skip deploy: $env:SKIP_DEPLOY"
             if ($env:SKIP_DEPLOY -eq "false") {
                 $command = "python building\\build_win.py"
                 iex $command
