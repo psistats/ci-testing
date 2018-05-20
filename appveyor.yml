@@ -1,6 +1,3 @@
-skip_commits:
-    message: /\[ci skip\]/
-
 environment:
     jenkins_token:
         secure: "7qqMKlxxhgpxUNhxIiL4XFYU9YBjM8vh6/AAkpD+QeLZJEwtcoaCTOGm1DSuLCit"

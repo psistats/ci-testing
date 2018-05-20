@@ -119,7 +119,7 @@ node('master') {
             }
 
             if (env.CI_SKIP != "true") {
-
+                /*
                 stage('test-py35') {
                     withPythonEnv(PY35_TOOL_NAME) {
                         pysh 'pip install tox'
@@ -132,11 +132,13 @@ node('master') {
                         pysh 'tox -e py36'
                     }
                 }
-                stage('test-w32') {
+                */
+                stage('appveyor') {
                     withCredentials([string(credentialsId: APPVEYOR_TOKEN, variable: 'TOKEN')]) {
                         run_appveyor(TOKEN, APPVEYOR_OWNER, APPVEYOR_NAME, scmVars.GIT_BRANCH, scmVars.GIT_COMMIT)
                     }
                 }
+                /*
                 stage('test-coverage') {
                     withPythonEnv(PY35_TOOL_NAME) {
                         pysh 'tox -e coverage'
@@ -152,7 +154,8 @@ node('master') {
                             zoomCoverageCharge: true
                         ])
                     }
-                }
+                }*/
+
 
                 if (scmVars.GIT_BRANCH == 'develop') {
                     stage('set-build-number') {
