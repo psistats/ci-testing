@@ -6,13 +6,11 @@ import win32event
 import win32timezone
 import servicemanager
 import socket
-
+from citest.win_business import WinBusiness
 
 class CitestService(win32serviceutil.ServiceFramework):
     _svc_name_ = "CitestService"
     _svc_display_name_ = "Citest Service"
-
-
 
     def __init__(self, args):
         win32serviceutil.ServiceFramework.__init__(self, args)
@@ -32,8 +30,6 @@ class CitestService(win32serviceutil.ServiceFramework):
         servicemanager.LogMsg(servicemanager.EVENTLOG_INFORMATION_TYPE,
                               servicemanager.PYS_SERVICE_STARTED,
                               (self._svc_name_, ''))
-        # self.ReportServiceStatus(win32service.SERVICE_RUNNING)
-        # win32event.WaitForSingleObject(self.hWaitStop, win32event.INFINITE)
         self._running = True
         self.main()
 
@@ -46,8 +42,12 @@ class CitestService(win32serviceutil.ServiceFramework):
         time.sleep(1)
 
     def main(self):
+
+        self.b = WinBusiness()
+
         while self._running == True:
-            self.counter()
+            self.log('Citest Counter: %s' % self.b.counter)
+            self.b.run()
 
 
 if __name__ == '__main__':

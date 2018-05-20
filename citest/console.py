@@ -1,8 +1,12 @@
-from citest.citest import adder
+from citest.business import Business
 
 def main():
 
-    x = 2
-    y = 3
+    b = Business()
 
-    print("adder(%s, %s) == %s" % (x, y, adder(x, y)))
+    print("Current Counter: %s" % b.counter)
+
+    for x in range(0,10):
+        b.run(x)
+        print("x: %s - counter: %s" % (x, b.counter))
+
