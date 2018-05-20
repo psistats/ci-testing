@@ -39,10 +39,6 @@ for:
 -
     only_commits:
         message: /\[deploy\]/
-
-    branches:
-        only:
-            - develop
     artifacts:
         - path: dist\w32installer\*
     after_test:
