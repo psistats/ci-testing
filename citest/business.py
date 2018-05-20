@@ -9,8 +9,5 @@ class Business():
         if amt == None:
             amt = 1
 
-        if os.name == 'nt':
-            amt = amt + 1
-
         self.counter = self.counter + amt
 
