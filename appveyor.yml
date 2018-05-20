@@ -46,7 +46,7 @@ test_script:
 
 for:
 -
-    before_deploy:
+    after_test:
         - ps: |
             echo "Skip deploy: $env:SKIP_DEPLOY"
             if ($env:SKIP_DEPLOY -eq "false") {
