@@ -189,7 +189,7 @@ node('master') {
                     for (int i = 0; i < artifacts.size(); i++) {
                         def artifact = artifacts[i]
                         debug("Downloading: ${artifact}")
-                        pysh "python building/download_appveyor_artifact.py ${artifact.url} ${artifact.fileName}"
+                        pysh "python building/download_appveyor_artifact.py \"${artifact.url}\" \"${artifact.fileName}\""
                     }
                     archiveArtifacts artifacts: "artifact_download/*.exe"
                 }
