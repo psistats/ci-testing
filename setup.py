@@ -1,12 +1,12 @@
 from setuptools import setup
 
 setup(name='citest',
-      version='0.1.0.dev4',
+      version='0.1.0.dev999',
       description='A project to test ci and building',
       author='Alex Dow',
       author_email='adow@psikon.com',
       url='http://github.com/psistats/ci-testing',
-      packages=['citest'],
+      packages=['citest', 'citest.w32'],
       license='MIT',
       classifiers=[
           'Development Status :: 4 - Beta',

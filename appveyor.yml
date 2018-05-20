@@ -1,0 +1,52 @@
+skip_commits:
+    message: /\[ci skip\]/
+
+environment:
+    jenkins_token:
+        secure: "7qqMKlxxhgpxUNhxIiL4XFYU9YBjM8vh6/AAkpD+QeLZJEwtcoaCTOGm1DSuLCit"
+    auth_token:
+        secure: "w2PeplVJGcBOjNKEdUHhfspQzjaAEkqnW+oxbtWFBnGrzZdRup6ac1VAoZcIqvKfUOFGveVKertOgPsgM5eT4w=="
+
+    matrix:
+        - PYTHON: "C:\\Python35-x64"
+          PYTHON_VERSION: "3.5.x"
+          PYTHON_ARCH: "64"
+
+skip_branch_with_pr: true
+
+install:
+    - ECHO "Installed SDKs:"
+    - ps: "ls \"C:/Program Files/Microsoft SDKs/Windows\""
+
+    - ps: if (-not(Test-Path($env:PYTHON))) { & appveyor\install.ps1 }
+
+    - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+
+    - "python --version"
+    - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
+
+    - "python -m pip install --upgrade pip"
+    - "pip install tox"
+    - "pip install -rw32-requirements.txt"
+
+build_script:
+    - "python setup.py build"
+
+test_script:
+    - "tox -e pywin"
+
+for:
+-
+    only_commits:
+        message: /\[deploy\]/
+    artifacts:
+        - path: dist\w32installer\*
+    after_test:
+        - "python building\\build_win.py"
+        - ps: "ls dist"
+    deploy:
+        provider: Webhook
+        url: "https://dev.psikon.org/jenkins/generic-webhook-trigger/invoke"
+        authorization: Basic $(auth_token)
+
+

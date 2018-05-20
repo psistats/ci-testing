@@ -263,3 +263,14 @@ You should now see your jobs in Jenkins.
 
 
 
+## Appveyor Integration
+
+While having everything managed by Jenkins would be great, Windows isn't free. Thankfully, Appveyor is.
+
+The workflow with Appveyor is simple. It will build commits and try to trigger a build on Jenkins. Under certain circumstances, jenkins will download the artifact and place it in a folder.
+
+To set this up securely is a bit convoluted. First, you need a Jenkins user that can build the job and get its API token.
+
+You then need to form a basic authentication header by base64 encoding the string "[jenkins_user]:[api_token]".
+
+In Appveyor, under your user account, select encrypt data, and enter in the base64 encoded string there. The encrypted string that's given, you can edit `appveyor.yml` and replace the value of `jenkins_token` with the encrypted string. This way, no sensitive information is displayed in the log files.
