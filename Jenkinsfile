@@ -180,7 +180,7 @@ node('master') {
         } else if (env.APPVEYOR == 'True')  {
             stage('deploy-appveyor-build') {
                 debug("Downloading appveyor artifacts")
-                if (fileExists("/artifact_downloads")) {
+                if (fileExists("artifact_downloads")) {
                     sh 'rm -rf ./artifact_downloads'
                 }
                 sh 'mkdir artifact_downloads'
