@@ -27,22 +27,22 @@ install:
     - ECHO "Installed SDKs:"
     - ps: "ls \"C:/Program Files/Microsoft SDKs/Windows\""
 
-    - ps: if (-not(Test-Path($env:PYTHON))) { & appveyor\install.ps1 }
+#    - ps: if (-not(Test-Path($env:PYTHON))) { & appveyor\install.ps1 }
 
     - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
 
     - "python --version"
     - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
 
-    - "python -m pip install --upgrade pip"
-    - "pip install tox"
+      #    - "python -m pip install --upgrade pip"
+      #    - "pip install tox"
     - "pip install -rw32-requirements.txt"
 
-build_script:
-    - "python setup.py build"
+#build_script:
+#    - "python setup.py build"
 
-test_script:
-    - "tox -e pywin"
+#test_script:
+#    - "tox -e pywin"
 
 for:
 -
