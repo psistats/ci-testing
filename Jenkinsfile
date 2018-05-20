@@ -101,7 +101,7 @@ node('master') {
         pipelineTriggers([
             [$class: 'GenericTrigger',
                 genericVariables: [
-                    [expressionType: 'JSONPath', key: 'APPVEYOR_ARTIFACTS', value: '$.artifacts'],
+                    [expressionType: 'JSONPath', key: 'APPVEYOR_ARTIFACTS', value: '$.artifacts[*]'],
                     [expressionType: 'JSONPath', key: 'APPVEYOR', value: '$.environmentVariables.appveyor'],
                     [expressionType: 'JSONPath', key: 'APPVEYOR_BUILD_ID', value: '$.buildId'],
                     [expressionType: 'JSONPath', key: 'APPVEYOR_BUILD_NUMBER', value: '$.buildNumber'],
