@@ -187,7 +187,7 @@ node('master') {
                     def artifacts = new groovy.json.JsonSlurperClassic().parseText(env.APPVEYOR_ARTIFACTS)
 
                     for (int i = 0; i < artifacts.size(); i++) {
-                        def artifact = env.APPVEYOR_ARTIFACTS[i]
+                        def artifact = artifacts[i]
                         debug("Downloading: ${artifact}")
                         pysh "python building/download_appveyor_artifact.py ${artifact.url} ${artifact.fileName}"
                     }
