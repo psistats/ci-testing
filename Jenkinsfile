@@ -18,7 +18,7 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
 
     if (branch.startsWith('PR')) {
         request['commitId'] = commitId
-    } else [
+    } else {
         request['branch'] = branch
     }
 
