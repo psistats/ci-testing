@@ -135,13 +135,13 @@ node('master') {
                         pysh 'tox -e py36'
                     }
                 }
-                */
+
                 stage('appveyor') {
                     withCredentials([string(credentialsId: APPVEYOR_TOKEN, variable: 'TOKEN')]) {
                         run_appveyor(TOKEN, APPVEYOR_OWNER, APPVEYOR_NAME, scmVars.GIT_BRANCH, scmVars.GIT_COMMIT)
                     }
                 }
-                /*
+
                 stage('test-coverage') {
                     withPythonEnv(PY35_TOOL_NAME) {
                         pysh 'tox -e coverage'
@@ -177,17 +177,18 @@ node('master') {
                     }
                 }
             }
-        } else if (env.APPVEYOR == 'True')  {
+        } // else if (env.APPVEYOR == 'True')  {
             stage('deploy-appveyor-build') {
                 debug("Downloading appveyor artifacts")
                 if (fileExists("artifact_downloads")) {
                     sh 'rm -rf ./artifact_downloads'
                 }
                 sh 'mkdir artifact_downloads'
+                sh 'wget https://ci.appveyor.com/api/buildjobs/uuq6l0fv4sresk6m/artifacts/dist%2Fw32installer%2Fcitest_0.1.0.dev999.exe -p ./artifact_downloads'
                 env.APPVEYOR_ARTIFACTS.each{ artifact ->
                     sh "wget ${artifact.url}"
                 }
             }
-        }
+        // }
     }
 }
