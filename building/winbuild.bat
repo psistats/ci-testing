@@ -8,4 +8,4 @@ SET ISCC="C:\Program Files (x86)\Inno Setup 5\iscc"
 cd %PROJECT_DIR%
 pyinstaller citest\w32\console.py
 pyinstaller citest\w32\service.py
-%ISCC% building\w32installer.iss
+%ISCC% building\w32installer.iss /DMyAppVersion=%1

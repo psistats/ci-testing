@@ -42,6 +42,11 @@ for:
     branches:
         only:
             - develop
+    artifacts:
+        - path: dist\w32installer\*
+    after_test:
+        - "building\\winbuild.bat"
+        - ps: "ls dist"
     deploy:
         provider: Webhook
         url: "https://dev.psikon.org/jenkins/generic-webhook-trigger/invoke"

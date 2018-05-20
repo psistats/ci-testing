@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Citest Console"
-#define MyAppVersion "0.1.1.dev1"
+;#define MyAppVersion "0.1.1.dev1"
 #define MyAppPublisher "Psikon"
 #define MyAppURL "http://www.example.com/"
 #define MyAppExeName "console.exe"
@@ -22,7 +22,7 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DisableProgramGroupPage=yes
 OutputDir=../dist/w32installer
-OutputBaseFilename=Install Citest
+OutputBaseFilename=citest_{#MyAppVersion}
 Compression=lzma
 SolidCompression=yes
 
