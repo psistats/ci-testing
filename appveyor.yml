@@ -4,12 +4,18 @@ environment:
     auth_token:
         secure: "w2PeplVJGcBOjNKEdUHhfspQzjaAEkqnW+oxbtWFBnGrzZdRup6ac1VAoZcIqvKfUOFGveVKertOgPsgM5eT4w=="
 
+    skip_deplopy: "true"
+    skip_test: "false"
+
     matrix:
         - PYTHON: "C:\\Python35-x64"
           PYTHON_VERSION: "3.5.x"
           PYTHON_ARCH: "64"
 
 skip_branch_with_pr: true
+
+init:
+    - ps: if ($env:APPVEYOR_REPO_COMMIT_MESSAGE -like "*\[deploy\]*") { $env:SKIP_DEPLOY="false" }
 
 install:
     - ECHO "Installed SDKs:"
@@ -34,11 +40,17 @@ test_script:
 
 for:
 -
-    only_commits:
-        message: /\[deploy\]/
+    before_deploy:
+        - ps: |
+            if ($env:SKIP_DEPLOY -eq "false") {
+                $command = "python building\\build_win.py"
+                iex $command
+            }
+
     artifacts:
         - path: dist\w32installer\*
     after_test:
+
         - "python building\\build_win.py2"
         - ps: "ls dist"
     deploy:
