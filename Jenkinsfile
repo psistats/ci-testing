@@ -182,7 +182,7 @@ node('master') {
         } else if (env.APPVEYOR == 'True')  {
             stage('deploy-appveyor-build') {
                 withPythonEnv(PY35_TOOL_NAME) {
-                    debug("Downloading appveyor artifacts")
+                    debug("Downloading appveyor artifacts: ${env.APPVEYOR_ARTIFACTS}")
                     env.APPVEYOR_ARTIFACTS.each{ artifact ->
                         pysh "python building/download_appveyor_artifact.py %{artifact.url}"
                     }
