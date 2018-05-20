@@ -160,6 +160,8 @@ node('master') {
                 }*/
 
 
+
+
                 if (scmVars.GIT_BRANCH == 'develop') {
                     stage('set-build-number') {
                         withPythonEnv(PY35_TOOL_NAME) {
