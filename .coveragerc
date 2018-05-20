@@ -1,10 +1,18 @@
+[html]
+directory = reports/coverage/html
+
+[xml]
+output = reports/coverage/coverage.xml
+
 [run]
-omit = 
+omit =
   tests/*
   .tox/*
 include = citest/*
 branch = True
 source = citest/
+data_file = reports/coverage/coverage.dat
+
 
 [report]
 show_missing = True

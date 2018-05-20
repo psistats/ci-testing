@@ -41,27 +41,35 @@ install:
 build_script:
     - "python setup.py build"
 
-#test_script:
-#    - "tox -e pywin"
+test_script:
+    - "tox -e pywin"
 
-for:
--
-    after_test:
-        - ps: |
-            echo "Skip deploy: $env:SKIP_DEPLOY"
-            if ($env:SKIP_DEPLOY -eq "false") {
-                $command = "python building\\build_win.py"
-                iex $command
-            }
+after_test:
+    - "tox -e coverage"
+    - ps: |
+        echo "Adding coverage.dat as artifact"
+        $env:COVERAGE = "true"
+        Push-AppveyorArtifact reports\coverage\coverage.dat -Filename coverage.dat
 
-    artifacts:
-        - path: 'dist\w32installer\*.exe'
-          name: citest
-          type: file
+    - ps: |
+        echo "Skip deploy: $env:SKIP_DEPLOY"
+        if ($env:SKIP_DEPLOY -eq "false") {
+            $command = "python building\\build_win.py"
+            iex $command
+            Get-ChildItem .\dist\w32installer\*.exe | % { Push-AppveyorArtifact $_.FullName -Filename $_.Name }
+        }
 
-    deploy:
-        provider: Webhook
-        url: "https://dev.psikon.org/jenkins/generic-webhook-trigger/invoke"
-        authorization: Basic $(auth_token)
+#artifacts:
+#    - path: 'dist\w32installer\*.exe'
+#      name: citest
+#      type: file
+#    - path: 'reports\coverage\coverage.dat'
+#      name: 'coverage.dat'
+#      type: file
+
+#deploy:
+#    provider: Webhook
+#    url: "https://dev.psikon.org/jenkins/generic-webhook-trigger/invoke"
+#    authorization: Basic $(auth_token)
 
 

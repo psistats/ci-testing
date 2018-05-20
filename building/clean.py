@@ -7,6 +7,7 @@ import glob
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
 PATHS = [
+    'reports',
     'artifact_download',
     'citest.egg-info',
     '**/*.pyc',
