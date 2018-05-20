@@ -177,7 +177,7 @@ node('master') {
                     }
                 }
             }
-        } else if (env.APPVEYOR == 'True' && scmVars.GIT_BRANCH == 'develop')  {
+        } else if (env.APPVEYOR == 'True')  {
             stage('deploy-appveyor-build') {
                 echo 'POST APPVEYOR'
             }
