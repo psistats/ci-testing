@@ -24,7 +24,7 @@ os.chdir(PROJECT_DIR)
 cmds = [
     ['pyinstaller', 'citest\\w32\\console.py'],
     ['pyinstaller', 'citest\\w32\\service.py'],
-    [ISCC, 'building\\w32installer.iss', '/DMyAppVersion=%s' % windows_version]
+    [ISCC, 'building\\w32installer.iss', '/DMyAppVersion=%s' % WINDOWS_VERSION]
 ]
 
 for cmd in cmds:
