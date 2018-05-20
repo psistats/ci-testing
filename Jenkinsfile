@@ -12,22 +12,17 @@ def should_skip() {
 def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
     debug('[APPVEYOR] Starting')
 
-    def request_body = """{
-        "accountName": "${accountName}",
-        "projectSlug": "${projectSlug}",
-        "branch": "${branch}",
-        "commitId": "${commitId}"
-    }"""
-
     def request = [:]
-    def request['accountName'] = accountName;
-    def request['projectSlug'] = projectSlug;
+    def request['accountName'] = accountName
+    def request['projectSlug'] = projectSlug
 
     if (branch.startsWith('PR')) {
-        request['commitId'] = commitId;
+        request['commitId'] = commitId
     } else [
-        request['branch'] = branch;
+        request['branch'] = branch
     }
+
+    def request_body = new groovy.json.JsonBuilder(request).toPrettyString();
 
     def build_response = httpRequest(
         url: 'https://ci.appveyor.com/api/builds',
