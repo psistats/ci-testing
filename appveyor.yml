@@ -39,7 +39,11 @@ build_script:
     - "python setup.py build"
 
 test_script:
+    - ps: New-Item reports\coverage\raw_data -ItemType Directory
+    - "pip install tox coverage"
     - "tox -e pywin"
+    - "coverage combine reports\coverage\raw_data"
+
 
 after_test:
     - ps: |
