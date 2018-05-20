@@ -19,6 +19,8 @@ init:
         echo "Commit message: $env:APPVEYOR_REPO_COMMIT_MESSAGE"
         if ($env:APPVEYOR_REPO_COMMIT_MESSAGE -like "*\[deploy\]*") {
             $env:SKIP_DEPLOY="false"
+        } else {
+            $env:SKIP_DEPLOY="true"
         }
 
 
