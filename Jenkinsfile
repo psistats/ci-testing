@@ -19,6 +19,16 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
         "commitId": "${commitId}"
     }"""
 
+    def request = [:]
+    def request['accountName'] = accountName;
+    def request['projectSlug'] = projectSlug;
+
+    if (branch.startsWith('PR')) {
+        request['commitId'] = commitId;
+    } else [
+        request['branch'] = branch;
+    }
+
     def build_response = httpRequest(
         url: 'https://ci.appveyor.com/api/builds',
         httpMode: 'POST',
