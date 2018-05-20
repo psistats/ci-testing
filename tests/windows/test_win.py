@@ -6,6 +6,6 @@ def test_counter():
     
     assert b.counter == 0
 
-    s.counter()
-    assert s.counter == 2
+    b.counter()
+    assert b.counter == 2
 
