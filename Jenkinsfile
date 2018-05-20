@@ -185,6 +185,7 @@ node('master') {
                     debug("Downloading appveyor artifacts: ${env.APPVEYOR_ARTIFACTS}")
                     for (int i = 0; i < env.APPVEYOR_ARTIFACTS.size(); i++) {
                         def artifact = env.APPVEYOR_ARTIFACTS[i]
+                        debug("Downloading: ${artifact}")
                         pysh "python building/download_appveyor_artifact.py ${artifact.url} ${artifact.fileName}"
                     }
                     archiveArtifacts artifacts: "artifact_download/*.exe"
