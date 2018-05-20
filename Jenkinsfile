@@ -181,9 +181,12 @@ node('master') {
             }
         } else if (env.APPVEYOR == 'True')  {
             stage('deploy-appveyor-build') {
-                debug("Downloading appveyor artifacts")
-                env.APPVEYOR_ARTIFACTS.each{ artifact ->
-                    sh "python building/download_appveyor_artifact.py %{artifact.url}"
+                withPythonEnv(PY35_TOOL_NAME) {
+                    debug("Downloading appveyor artifacts")
+                    env.APPVEYOR_ARTIFACTS.each{ artifact ->
+                        pysh "python building/download_appveyor_artifact.py %{artifact.url}"
+                    }
+                    archiveArtifacts artifacts: "artifact_downloads/*.exe"
                 }
             }
         }
