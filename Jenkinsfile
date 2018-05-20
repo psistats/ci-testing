@@ -184,7 +184,7 @@ node('master') {
                     sh 'rm -rf ./artifact_downloads'
                 }
                 sh 'mkdir artifact_downloads'
-                env.APPVEYOR_ARTIFACTS.each{ -> artifact
+                env.APPVEYOR_ARTIFACTS.each{ artifact ->
                     sh "wget ${artifact.url}"
                 }
             }
