@@ -17,9 +17,11 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
     request['projectSlug'] = projectSlug
 
     if (branch.startsWith('PR')) {
-        request['commitId'] = commitId
+        def pr = branch.split('-')[1]
+        request['pullRequestId'] = pr
     } else {
         request['branch'] = branch
+        request['commitId'] = commitId
     }
 
     def request_body = new groovy.json.JsonBuilder(request).toPrettyString();
