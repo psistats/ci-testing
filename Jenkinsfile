@@ -101,7 +101,7 @@ node('master') {
         pipelineTriggers([
             [$class: 'GenericTrigger',
                 genericVariables: [
-                    [expressionType: 'JSONPath', key: 'APPVEYOR_ARTIFACT', value: '$.artifacts[0].url'],
+                    [expressionType: 'JSONPath', key: 'APPVEYOR_ARTIFACTS', value: '$.artifacts'],
                     [expressionType: 'JSONPath', key: 'APPVEYOR', value: '$.environmentVariables.appveyor'],
                     [expressionType: 'JSONPath', key: 'APPVEYOR_BUILD_ID', value: '$.buildId'],
                     [expressionType: 'JSONPath', key: 'APPVEYOR_BUILD_NUMBER', value: '$.buildNumber'],
@@ -179,7 +179,14 @@ node('master') {
             }
         } else if (env.APPVEYOR == 'True')  {
             stage('deploy-appveyor-build') {
-                echo 'POST APPVEYOR'
+                debug("Downloading appveyor artifacts")
+                if (fileExists("/artifact_downloads")) {
+                    sh 'rm -rf ./artifact_downloads'
+                }
+                sh 'mkdir artifact_downloads'
+                env.APPVEYOR_ARTIFACTS.each{ -> artifact
+                    sh "wget ${artifact.url}"
+                }
             }
         }
     }
