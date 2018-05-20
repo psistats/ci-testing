@@ -17,14 +17,17 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
     request['projectSlug'] = projectSlug
 
     if (branch.startsWith('PR')) {
+        debug('Building a pull request')
         def pr = branch.split('-')[1]
         request['pullRequestId'] = pr
     } else {
+        debug("Building: ${branch} : ${commitId}")
         request['branch'] = branch
         request['commitId'] = commitId
     }
 
     def request_body = new groovy.json.JsonBuilder(request).toPrettyString();
+    debug("[APPVEYOR] Request body: ${request_body}")
 
     def build_response = httpRequest(
         url: 'https://ci.appveyor.com/api/builds',
