@@ -135,12 +135,14 @@ node('master') {
                         pysh 'tox -e py36'
                     }
                 }
+                */
 
                 stage('appveyor') {
                     withCredentials([string(credentialsId: APPVEYOR_TOKEN, variable: 'TOKEN')]) {
                         run_appveyor(TOKEN, APPVEYOR_OWNER, APPVEYOR_NAME, scmVars.GIT_BRANCH, scmVars.GIT_COMMIT)
                     }
                 }
+                /*
 
                 stage('test-coverage') {
                     withPythonEnv(PY35_TOOL_NAME) {
@@ -177,7 +179,7 @@ node('master') {
                     }
                 }
             }
-        } // else if (env.APPVEYOR == 'True')  {
+        } else if (env.APPVEYOR == 'True')  {
             stage('deploy-appveyor-build') {
                 debug("Downloading appveyor artifacts")
                 if (fileExists("artifact_downloads")) {
@@ -189,6 +191,6 @@ node('master') {
                     sh "wget ${artifact.url}"
                 }
             }
-        // }
+        }
     }
 }

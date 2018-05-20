@@ -55,7 +55,10 @@ for:
             }
 
     artifacts:
-        - path: dist\w32installer\*
+        - path: 'dist\w32installer\*.exe'
+          name: citest
+          type: file
+
     deploy:
         provider: Webhook
         url: "https://dev.psikon.org/jenkins/generic-webhook-trigger/invoke"
