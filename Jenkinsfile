@@ -143,31 +143,6 @@ node('master') {
                     }
                 }
 
-                stage('test-coverage') {
-                    withPythonEnv(PY35_TOOL_NAME) {
-                        pysh 'tox -e coverage'
-                    }
-                }
-
-                /*
-
-                        step([$class: 'CoberturaPublisher',
-                            autoUpdateHealth: false,
-                            autoUpdateStability: false,
-                            coberturaReportFile: 'reports/coverage/jenkins-coverage.xml',
-                            failUnhealthy: false,
-                            failUnstable: false,
-                            maxNumberOfBuilds: 30,
-                            onlyStable: true,
-                            sourceEncoding: 'ASCII',
-                            zoomCoverageCharge: true
-                        ])
-                    }
-                }
-                */
-
-
-
 
                 if (scmVars.GIT_BRANCH == 'develop') {
                     // A commit to branch means changing the build number
@@ -207,9 +182,22 @@ node('master') {
                 stage('publish-all-coverage') {
                     withPythonEnv(PY35_TOOL_NAME) {
                         sh 'cp artifact_dowloads/coverage.dat reports/coverage/coverage-win.dat'
-                        pysh 'pip install coverage'
+                        pysh 'tox -e coverage'
 
-
+                        step([$class: 'CoberturaPublisher',
+                            autoUpdateHealth: false,
+                            autoUpdateStability: false,
+                            coberturaReportFile: 'reports/coverage/coverage.xml',
+                            failUnhealthy: false,
+                            failUnstable: false,
+                            maxNumberOfBuilds: 30,
+                            onlyStable: true,
+                            sourceEncoding: 'ASCII',
+                            zoomCoverageCharge: true
+                        ])
+                    }
+                }
+            }
         }
 
         if (env.APPVEYOR_COVERAGE == 'true') {
