@@ -184,7 +184,7 @@ node('master') {
                     sh 'rm -rf ./artifact_downloads'
                 }
                 sh 'mkdir artifact_downloads'
-                sh 'wget https://ci.appveyor.com/api/buildjobs/uuq6l0fv4sresk6m/artifacts/dist%2Fw32installer%2Fcitest_0.1.0.dev999.exe -p ./artifact_downloads'
+                sh 'wget -P ./artifact_downloads https://ci.appveyor.com/api/buildjobs/uuq6l0fv4sresk6m/artifacts/dist%2Fw32installer%2Fcitest_0.1.0.dev999.exe'
                 env.APPVEYOR_ARTIFACTS.each{ artifact ->
                     sh "wget ${artifact.url}"
                 }
