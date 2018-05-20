@@ -83,7 +83,10 @@ node('master') {
             [$class: 'GenericTrigger',
                 genericVariables: [
                     [expressionType: 'JSONPath', key: 'APPVEYOR_ARTIFACT', value: '$.artifacts[0].url'],
-                    [expressionType: 'JSONPath', key: 'APPVEYOR', value: '$.environmentVariables.appveyor']
+                    [expressionType: 'JSONPath', key: 'APPVEYOR', value: '$.environmentVariables.appveyor'],
+                    [expressionType: 'JSONPath', key: 'APPVEYOR_BUILD_ID', value: '$.buildId'],
+                    [expressionType: 'JSONPath', key: 'APPVEYOR_BUILD_NUMBER', value: '$.buildNumber'],
+                    [expressionType: 'JSONPath', key: 'APPVEYOR_BUILD_VERSION', value: '$.buildVersion']
                 ]
             ]
         ])
