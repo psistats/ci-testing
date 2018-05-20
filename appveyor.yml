@@ -8,8 +8,8 @@ environment:
     skip_test: "false"
 
     matrix:
-        - PYTHON: "C:\\Python35-x64"
-          PYTHON_VERSION: "3.5.x"
+        - PYTHON: "C:\\Python36-x64"
+          PYTHON_VERSION: "3.6.x"
           PYTHON_ARCH: "64"
 
 skip_branch_with_pr: true
