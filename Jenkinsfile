@@ -13,8 +13,8 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
     debug('[APPVEYOR] Starting')
 
     def request = [:]
-    def request['accountName'] = accountName
-    def request['projectSlug'] = projectSlug
+    request['accountName'] = accountName
+    request['projectSlug'] = projectSlug
 
     if (branch.startsWith('PR')) {
         request['commitId'] = commitId
