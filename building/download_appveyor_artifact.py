@@ -8,6 +8,8 @@ from urllib.parse import urlparse, unquote
 PROJECT_DIR = project_dir()
 
 DOWNLOAD_DIR = os.path.join(PROJECT_DIR, 'artifact_download')
+DOWNLOAD_URL = sys.argv[1]
+DOWNLOAD_FILE = os.path.join(DOWNLOAD_DIR, os.path.basename(sys.argv[2]))
 
 if os.path.exists(DOWNLOAD_DIR):
     shutil.rmtree(DOWNLOAD_DIR)
@@ -22,6 +24,8 @@ target_filename = os.path.basename(urlparts.path)
 
 target_filename = unquote(target_filename)
 target_filename = os.path.basename(target_filename)
+
+print("Downloading %s -> %s" % (DOWNLOAD_URL, DOWNLOAD_FILE))
 
 
 def report_hook(block, size, totalsize):

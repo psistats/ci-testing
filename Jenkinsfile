@@ -184,7 +184,7 @@ node('master') {
                 withPythonEnv(PY35_TOOL_NAME) {
                     debug("Downloading appveyor artifacts: ${env.APPVEYOR_ARTIFACTS}")
                     env.APPVEYOR_ARTIFACTS.each{ artifact ->
-                        pysh "python building/download_appveyor_artifact.py %{artifact.url}"
+                        pysh "python building/download_appveyor_artifact.py %{artifact.url} %{artifact.fileName}"
                     }
                     archiveArtifacts artifacts: "artifact_downloads/*.exe"
                 }
