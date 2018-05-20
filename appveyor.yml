@@ -42,7 +42,7 @@ for:
     artifacts:
         - path: dist\w32installer\*
     after_test:
-        - "python building\\build_win.py"
+        - "python building\\build_win.py2"
         - ps: "ls dist"
     deploy:
         provider: Webhook
