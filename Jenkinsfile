@@ -124,7 +124,6 @@ node('master') {
             }
 
             if (env.CI_SKIP != "true") {
-                /*
                 stage('test-py35') {
                     withPythonEnv(PY35_TOOL_NAME) {
                         pysh 'pip install tox'
@@ -137,7 +136,6 @@ node('master') {
                         pysh 'tox -e py36'
                     }
                 }
-                */
 
                 stage('appveyor') {
                     withCredentials([string(credentialsId: APPVEYOR_TOKEN, variable: 'TOKEN')]) {
