@@ -182,13 +182,8 @@ node('master') {
         } else if (env.APPVEYOR == 'True')  {
             stage('deploy-appveyor-build') {
                 debug("Downloading appveyor artifacts")
-                if (fileExists("artifact_downloads")) {
-                    sh 'rm -rf ./artifact_downloads'
-                }
-                sh 'mkdir artifact_downloads'
-                sh 'wget --no-parent -P ./artifact_downloads https://ci.appveyor.com/api/buildjobs/uuq6l0fv4sresk6m/artifacts/dist%2Fw32installer%2Fcitest_0.1.0.dev999.exe'
                 env.APPVEYOR_ARTIFACTS.each{ artifact ->
-                    sh "wget ${artifact.url}"
+                    sh "python building/download_appveyor_artifact.py %{artifact.url}"
                 }
             }
         }
