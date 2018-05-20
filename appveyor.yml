@@ -38,8 +38,8 @@ install:
       #    - "pip install tox"
     - "pip install -rw32-requirements.txt"
 
-#build_script:
-#    - "python setup.py build"
+build_script:
+    - "python setup.py build"
 
 #test_script:
 #    - "tox -e pywin"
