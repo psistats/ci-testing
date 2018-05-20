@@ -30,13 +30,6 @@ build_script:
 test_script:
     - "tox -e pywin"
 
-after_test:
-    - "building\\winbuild.bat"
-    - ps: "ls dist"
-
-artifacts:
-    - path: dist\w32installer\*
-
 for:
 -
     branches:
@@ -45,7 +38,7 @@ for:
     artifacts:
         - path: dist\w32installer\*
     after_test:
-        - "building\\winbuild.bat"
+        - "python building\\build_win.py"
         - ps: "ls dist"
     deploy:
         provider: Webhook
