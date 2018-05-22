@@ -97,6 +97,8 @@ node('master') {
     def PY35_TOOL_NAME = 'psikon-py35'
     def PY36_TOOL_NAME = 'psikon-py36'
 
+    authenticationToken('secret-test-citest')
+
     properties([
         pipelineTriggers([
             [$class: 'GenericTrigger',
@@ -164,7 +166,7 @@ node('master') {
 
             stage('appveyor-download-artifacts') {
 
-                debug("Artifacts: ${env.APPVEYOR_ARTIFACTS}");
+                debug("Artifacts: ${env.APPVEYOR_ARTIFACTS}")
 
                 def artifacts = new groovy.json.JsonSlurperClassic().parseText(env.APPVEYOR_ARTIFACTS)
                 for (int i = 0; i < artifacts.size(); i++) {
@@ -190,19 +192,19 @@ node('master') {
                         pysh 'coverage report'
                         pysh 'coverage html'
                         pysh 'coverage xml'
-
-                        step([$class: 'CoberturaPublisher',
-                            autoUpdateHealth: false,
-                            autoUpdateStability: false,
-                            coberturaReportFile: 'reports/coverage/coverage.xml',
-                            failUnhealthy: false,
-                            failUnstable: false,
-                            maxNumberOfBuilds: 30,
-                            onlyStable: true,
-                            sourceEncoding: 'ASCII',
-                            zoomCoverageCharge: true
-                        ])
                     }
+
+                    step([$class: 'CoberturaPublisher',
+                        autoUpdateHealth: false,
+                        autoUpdateStability: false,
+                        coberturaReportFile: 'reports/coverage/coverage.xml',
+                        failUnhealthy: false,
+                        failUnstable: false,
+                        maxNumberOfBuilds: 30,
+                        onlyStable: true,
+                        sourceEncoding: 'ASCII',
+                        zoomCoverageCharge: true
+                    ])
                 }
             }
         }
