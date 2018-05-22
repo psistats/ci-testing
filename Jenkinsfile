@@ -54,7 +54,7 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
             httpMode: 'GET',
             customHeaders: [
                 [name: 'Authorization', value: "Bearer ${appveyor_token}"],
-                99999[name: 'Accept', value: 'application/json']
+                [name: 'Accept', value: 'application/json']
             ]
         )
 
@@ -166,7 +166,7 @@ node('master') {
 
             stage('appveyor-download-artifacts') {
 
-                // debug("Artifacts: ${env.APPVEYOR_ARTIFACTS}")
+                debug("Artifacts: ${env.APPVEYOR_ARTIFACTS}")
 
                 def artifacts = new groovy.json.JsonSlurperClassic().parseText(env.APPVEYOR_ARTIFACTS)
                 for (int i = 0; i < artifacts.size(); i++) {
