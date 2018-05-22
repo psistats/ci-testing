@@ -181,8 +181,12 @@ node('master') {
             if (env.APPVEYOR_COVERAGE == 'true') {
                 stage('publish-all-coverage') {
                     withPythonEnv(PY35_TOOL_NAME) {
-                        sh 'cp artifact_dowloads/coverage.dat reports/coverage/coverage-win.dat'
+                        sh 'cp artifact_dowloads/coverage.dat reports/coverage/raw_data/coverage-win.dat'
                         pysh 'tox -e coverage'
+                        pysh 'coverage combine reports/coverage/raw_data'
+                        pysh 'coverage report'
+                        pysh 'coverage html'
+                        pysh 'coverage xml'
 
                         step([$class: 'CoberturaPublisher',
                             autoUpdateHealth: false,
@@ -196,21 +200,6 @@ node('master') {
                             zoomCoverageCharge: true
                         ])
                     }
-                }
-            }
-        }
-
-        if (env.APPVEYOR_COVERAGE == 'true') {
-            stage('publish-all-coverage') {
-                withPythonEnv(PY35_TOOL_NAME) {
-                    debug("Publishing all coverage reports")
-
-                    pysh 'cp artifact_downloads/coverage.dat reports/coverage/coverage-win.dat'
-                    pysh 'pip install coverage'
-                    pysh 'coverage combine reports/coverage/raw_data'
-                    pysh 'coverage report'
-                    pysh 'coverage html'
-                    pysh 'coverage xml'
                 }
             }
         }
