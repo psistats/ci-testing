@@ -54,6 +54,7 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
     def build_obj = new groovy.json.JsonSlurperClassic().parseText(content)
 
     debug("[APPVEYOR] Build ID: ${build_obj.buildId}");
+    debug("[APPVEYOR] Build Version: ${build_obj.version");
 
     def appveyor_status = 'n/a';
     def appveyor_finished = false;
@@ -61,7 +62,7 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
 
     while (appveyor_finished != true) {
         def status_response = httpRequest(
-            url: "https://ci.appveyor.com/api/projects/${accountName}/${projectSlug}/history?recordsNumber=5",
+            url: "https://ci.appveyor.com/api/projects/${accountName}/${projectSlug}/build/${build_obj.version}",
             httpMode: 'GET',
             customHeaders: [
                 [name: 'Authorization', value: "Bearer ${appveyor_token}"],
@@ -73,19 +74,15 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
         debug(groovy.json.JsonOutput.prettyPrint(status_content));
         def build_data = new groovy.json.JsonSlurperClassic().parseText(status_content)
 
-        build_data.builds.each{ b ->
-            if (b.buildId == build_obj.buildId) {
-                debug("[APPVEYOR] Build status: ${b.status}")
-                if (b.status == "queued" || b.status == "running") {
-                    return;
-                } else {
-                    appveyor_finished = true;
-                    appveyor_status   = b.status;
-                }
-            }
+        if (build_data.build.status == "queued" || build_data.status == "running") {
+          debug("[APPVEYOR] Waiting ... ");
+          sleep(5);
+          continue;
+        } else {
+          appveyor_finished = true;
+          appveyor_status   = build_data.build.status;
+          break;
         }
-
-        sleep(5)
     }
 
     debug("[APPVEYOR] Build completed - status: ${appveyor_status}")
