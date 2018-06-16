@@ -77,11 +77,9 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
         if (build_data.build.status == "queued" || build_data.status == "running") {
           debug("[APPVEYOR] Waiting ... ");
           sleep(5);
-          continue;
         } else {
           appveyor_finished = true;
           appveyor_status   = build_data.build.status;
-          break;
         }
     }
 
