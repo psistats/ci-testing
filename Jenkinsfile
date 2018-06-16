@@ -21,7 +21,7 @@ def download_appveyor_artifacts(build_version, accountName, projectSlug) {
   debug('[APPVEYOR] Downloading artifacts');
 
   def content = httpRequest(
-    url: "https://ci.appveyor.com/api/${accountName}/${projectSlug}/build/${build_version}",
+    url: "https://ci.appveyor.com/api/projects/${accountName}/${projectSlug}/build/${build_version}",
     customHeaders: [
       [name: 'Accept', value: 'application/json']
     ]
