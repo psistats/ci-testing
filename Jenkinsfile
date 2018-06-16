@@ -70,6 +70,7 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
         )
 
         def status_content = status_response.getContent()
+        debug(groovy.json.JsonOutput.prettyPrint(status_content);
         def build_data = new groovy.json.JsonSlurperClassic().parseText(status_content)
 
         build_data.builds.each{ b ->
