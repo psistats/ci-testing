@@ -39,6 +39,7 @@ def download_appveyor_artifacts(build_version, accountName, projectSlug) {
   );
   
   def artifact_response_content = artifact_response.getContent();
+  debug(artifact_response_content);
 
   build_obj = new groovy.json.JsonSlurperClassic().parseText(artifact_response_content);
   
