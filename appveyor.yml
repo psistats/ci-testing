@@ -67,9 +67,9 @@ after_test:
 #      name: 'coverage.dat'
 #      type: file
 
-deploy:
-    provider: Webhook
-    url: "https://dev.psikon.org/jenkins/generic-webhook-trigger/invoke"
-    authorization: Basic $(auth_token)
+#deploy:
+#    provider: Webhook
+#    url: "https://dev.psikon.org/jenkins/generic-webhook-trigger/invoke"
+#    authorization: Basic $(auth_token)
 
 
