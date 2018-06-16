@@ -1,5 +1,7 @@
 # citest
 
+THIS IS STILL A WORK IN PROGRESS
+
 This project aims to act as a template for future projects. It setups a series of jenkin jobs, has a bunch of helpful scripts, and ultimately automates the whole process of pull request testing, deploying packages of various kinds, and incrementing version numbers, and so on.
 
 It also serves as a point of documentation for starting up your own CI environment from scratch.

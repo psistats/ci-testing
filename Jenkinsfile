@@ -5,7 +5,14 @@ def debug(msg) {
 def should_skip() {
     result = sh (script: "git log -1 | grep '.*\\[ci skip\\].*'", returnStatus: true)
     if (result == 0) {
-        env.CI_SKIP == "true"
+        env.CI_SKIP = "true"
+    }
+}
+
+def should_deloy() {
+    result = sh (script: "git log -1 | grep .*\\[deploy\\].*'", returnStatus: true)
+    if (result == 0) {
+        env.DEPLOY = "true"
     }
 }
 
@@ -15,6 +22,7 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
     def request = [:]
     request['accountName'] = accountName
     request['projectSlug'] = projectSlug
+    request['environmentVariables'] = env;
 
     if (branch.startsWith('PR')) {
         debug('Building a pull request')
@@ -155,11 +163,13 @@ node('master') {
                         sh 'git commit -am "Increase build number [deploy]"'
                         sh 'git push'
                     }
+                    /*
                     stage('build-debian') {
                         withPythonEnv(PY35_TOOL_NAME) {
                             pysh "python building/build_deb.py"
                         }
                     }
+                    */
                 }
             }
         } else if (env.APPVEYOR == 'True')  {
