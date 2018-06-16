@@ -47,7 +47,10 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
         requestBody: request_body
     )
 
-    def content = build_response.getContent()
+    def content = build_response.getContent();
+    debug(groovy.json.JsonOutput.prettyPrint(content));
+
+
     def build_obj = new groovy.json.JsonSlurperClassic().parseText(content)
 
     debug("[APPVEYOR] Build ID: ${build_obj.buildId}");
@@ -105,7 +108,7 @@ node('master') {
     def PY35_TOOL_NAME = 'psikon-py35'
     def PY36_TOOL_NAME = 'psikon-py36'
 
-    authenticationToken('secret-test-citest')
+    // authenticationToken('secret-test-citest')
 
     properties([
         pipelineTriggers([
