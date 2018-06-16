@@ -54,7 +54,7 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
     def build_obj = new groovy.json.JsonSlurperClassic().parseText(content)
 
     debug("[APPVEYOR] Build ID: ${build_obj.buildId}");
-    debug("[APPVEYOR] Build Version: ${build_obj.version");
+    debug("[APPVEYOR] Build Version: ${build_obj.version}");
 
     def appveyor_status = 'n/a';
     def appveyor_finished = false;
