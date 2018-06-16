@@ -16,6 +16,39 @@ def should_deloy() {
     }
 }
 
+def download_appveyor_artifacts(build_version, accountName, projectSlug) {
+
+  debug('[APPVEYOR] Downloading artifacts');
+
+  def content = httpRequest(
+    url: "https://ci.appveyor.com/api/${accountName}/${projectSlug}/build/${build_version}",
+    customHeaders: [
+      [name: 'Accept', value: 'application/json']
+    ]
+  );
+  debug(groovy.json.JsonOutput.prettyPrint(content.getContent()));
+  def build_obj = new groovy.json.JsonSlurperClassic().parseText(content.getContent());
+
+  def job_id = build_obj.build.jobs[0].jobId;
+
+  def artifact_response = httpRequest(
+    url: "https://ci.appveyor.com/api/buildjobs/${job_id}/artifacts",
+    customHeaders: [
+      [name: 'Accept', value: 'application/json']
+    ]
+  );
+  
+  def artifact_response_content = artifact_response.getContent();
+
+  def build_obj = new groovy.json.JsonSlurperClassic().parseText(artifact_response_content);
+  
+  build_obj.each {
+    debug("[APPVEYOR] Artifact found: ${it.fileName}");
+  };
+  
+
+}
+
 def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
     debug('[APPVEYOR] Starting')
 
@@ -88,6 +121,8 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
     if (appveyor_status != "success") {
         error("Appveyor build failed.")
     }
+
+    return build_obj.version;
 }
 
 
@@ -148,7 +183,8 @@ node('master') {
 
                 stage('appveyor') {
                     withCredentials([string(credentialsId: APPVEYOR_TOKEN, variable: 'TOKEN')]) {
-                        run_appveyor(TOKEN, APPVEYOR_OWNER, APPVEYOR_NAME, scmVars.GIT_BRANCH, scmVars.GIT_COMMIT)
+                        build_version = run_appveyor(TOKEN, APPVEYOR_OWNER, APPVEYOR_NAME, scmVars.GIT_BRANCH, scmVars.GIT_COMMIT)
+                        download_appveyor_artifacts(build_version, APPVEYOR_OWNER, APPVEYOR_NAME);
                     }
                 }
 
