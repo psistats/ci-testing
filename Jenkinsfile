@@ -22,7 +22,7 @@ def run_appveyor(appveyor_token, accountName, projectSlug, branch, commitId) {
     def request = [:]
     request['accountName'] = accountName
     request['projectSlug'] = projectSlug
-    request['environmentVariables'] = env;
+    request['environmentVariables'] = env.environment;
 
     if (branch.startsWith('PR')) {
         debug('Building a pull request')
